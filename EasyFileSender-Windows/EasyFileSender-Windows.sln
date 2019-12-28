@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.960
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.WindowsFormApp", "EFS.WindowsFormApp\EFS.WindowsFormApp.csproj", "{E1EBED9F-3A96-4226-A9D9-FA109C6FB221}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.Utilities", "EFS.Utilities\EFS.Utilities.csproj", "{C367F0BD-FE9D-40AB-ADF3-241948471196}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1EBED9F-3A96-4226-A9D9-FA109C6FB221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1EBED9F-3A96-4226-A9D9-FA109C6FB221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1EBED9F-3A96-4226-A9D9-FA109C6FB221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1EBED9F-3A96-4226-A9D9-FA109C6FB221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81FCED60-12D6-4C3B-B763-CD4EF817291A}
+	EndGlobalSection
+EndGlobal
