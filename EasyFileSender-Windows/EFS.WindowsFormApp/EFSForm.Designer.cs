@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.yourIPLabel = new System.Windows.Forms.Label();
+            this.BroadcastClientTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // panel1
@@ -83,6 +85,10 @@
             this.yourIPLabel.TabIndex = 4;
             this.yourIPLabel.Text = "unknown";
             // 
+            // BroadcastClientTimer
+            // 
+            this.BroadcastClientTimer.Interval = 5000;
+            // 
             // EFSForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -109,6 +115,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label yourIPLabel;
+        private System.Windows.Forms.Timer BroadcastClientTimer;
     }
 }
 
