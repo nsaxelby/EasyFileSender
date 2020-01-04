@@ -4,9 +4,7 @@ using EFS.Utilities;
 using EFS.Utilities.Discovery;
 using EFS.WindowsFormApp.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -69,6 +67,31 @@ namespace EFS.WindowsFormApp
                     _clientList.Add(new ClientInfoViewModelListItem(clientInfo, string.Equals(_myIpAddress, clientInfo.IpAddress)));
                 }
             }));           
+        }
+
+        public void DrawSelectedClient()
+        {
+            if(clientListBox.SelectedItem != null)
+            {
+                ClientInfoViewModelListItem clientObjectSelected = (ClientInfoViewModelListItem)clientListBox.SelectedItem;
+                if(clientObjectSelected.IsSelfClient)
+                {
+                    selectedIpLabel.Text = "You: " + clientObjectSelected.IpAddress + " - Receiving Files";
+                    sendFileButton.Visible = false;
+                    transfersPanel.Size = new System.Drawing.Size(transfersPanel.Size.Width, this.Size.Height - 89);
+                }
+                else
+                {
+                    selectedIpLabel.Text = clientObjectSelected.IpAddress;
+                    sendFileButton.Visible = true;
+                    transfersPanel.Size = new System.Drawing.Size(transfersPanel.Size.Width, this.Size.Height - 118);
+                }
+            }
+        }
+
+        private void ClientListBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            DrawSelectedClient();
         }
     }
 }
