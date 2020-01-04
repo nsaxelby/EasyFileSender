@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C367F0BD-FE9D-40AB-ADF3-241948471196}</ProjectGuid>
+    <ProjectGuid>{1999BB80-7F07-4D58-AEE4-227DEC2738F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EFS.Utilities</RootNamespace>
-    <AssemblyName>EFS.Utilities</AssemblyName>
+    <RootNamespace>EFS.Global</RootNamespace>
+    <AssemblyName>EFS.Global</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,18 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Discovery\DiscoveryAdvertiser.cs" />
-    <Compile Include="Discovery\DiscoveryListener.cs" />
-    <Compile Include="Discovery\DiscoveryService.cs" />
-    <Compile Include="Discovery\DiscoveryUtils.cs" />
-    <Compile Include="EnvironmentTools.cs" />
+    <Compile Include="Enums\ClientTypeEnum.cs" />
+    <Compile Include="Enums\VersionNumberEnum.cs" />
+    <Compile Include="Exceptions\MalformedUDPBroadcastException.cs" />
+    <Compile Include="Models\ClientInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EFS.Global\EFS.Global.csproj">
-      <Project>{1999BB80-7F07-4D58-AEE4-227DEC2738F0}</Project>
-      <Name>EFS.Global</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

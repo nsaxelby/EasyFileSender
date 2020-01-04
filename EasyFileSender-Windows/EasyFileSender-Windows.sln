@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.WindowsFormApp", "EFS.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.Utilities", "EFS.Utilities\EFS.Utilities.csproj", "{C367F0BD-FE9D-40AB-ADF3-241948471196}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.UtilitiesTests", "EFS.UtilitiesTests\EFS.UtilitiesTests.csproj", "{7963CB0C-A137-4839-82B7-667D10AC28E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.Global", "EFS.Global\EFS.Global.csproj", "{1999BB80-7F07-4D58-AEE4-227DEC2738F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C367F0BD-FE9D-40AB-ADF3-241948471196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7963CB0C-A137-4839-82B7-667D10AC28E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7963CB0C-A137-4839-82B7-667D10AC28E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7963CB0C-A137-4839-82B7-667D10AC28E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7963CB0C-A137-4839-82B7-667D10AC28E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
