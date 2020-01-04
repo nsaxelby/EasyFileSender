@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ClientListBox.Designer.cs">
+      <DependentUpon>ClientListBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="EFSForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +60,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ClientInfoViewModelListItem.cs" />
     <EmbeddedResource Include="EFSForm.resx">
       <DependentUpon>EFSForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -80,10 +87,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EFS.Global\EFS.Global.csproj">
+      <Project>{1999BB80-7F07-4D58-AEE4-227DEC2738F0}</Project>
+      <Name>EFS.Global</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EFS.Utilities\EFS.Utilities.csproj">
       <Project>{C367F0BD-FE9D-40AB-ADF3-241948471196}</Project>
       <Name>EFS.Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\apple-32.png" />
+    <Content Include="Images\IconAttribution.txt" />
+    <EmbeddedResource Include="Images\windows-32-ico.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

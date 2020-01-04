@@ -2,6 +2,8 @@
 using System;
 using EFS.Global.Models;
 using EFS.Global.Exceptions;
+using EFS.Utilities.Discovery;
+using EFS.Global.Enums;
 
 namespace EFS.Utilities.Tests
 {
@@ -12,44 +14,44 @@ namespace EFS.Utilities.Tests
         public void SendDiscoveryPacketTest_SucceedParse()
         {
             // Normal
-            Assert.AreEqual(DiscoveryTools.ObtainBroadcastAddress("192.168.0.50"), "192.168.0.255");
+            Assert.AreEqual(DiscoveryUtils.GetBroadcastAddress("192.168.0.50"), "192.168.0.255");
             // High bounds
-            Assert.AreEqual(DiscoveryTools.ObtainBroadcastAddress("254.254.254.254"), "254.254.254.255");
+            Assert.AreEqual(DiscoveryUtils.GetBroadcastAddress("254.254.254.254"), "254.254.254.255");
             // Low bounds
-            Assert.AreEqual(DiscoveryTools.ObtainBroadcastAddress("1.1.1.1"), "1.1.1.255");
+            Assert.AreEqual(DiscoveryUtils.GetBroadcastAddress("1.1.1.1"), "1.1.1.255");
         }
 
         [TestMethod()]
         public void SendDiscoveryPacketTest_ExceptionInvalid1()
         {
-            Assert.ThrowsException<FormatException>(() => DiscoveryTools.ObtainBroadcastAddress("192.168.0.256"));
+            Assert.ThrowsException<FormatException>(() => DiscoveryUtils.GetBroadcastAddress("192.168.0.256"));
         }
 
         [TestMethod()]
         public void SendDiscoveryPacketTest_ExceptionInvalid2()
         {
-            Assert.ThrowsException<FormatException>(() => DiscoveryTools.ObtainBroadcastAddress("not valid ip"));
+            Assert.ThrowsException<FormatException>(() => DiscoveryUtils.GetBroadcastAddress("not valid ip"));
         }
 
         [TestMethod()]
         public void SendDiscoveryPacketTest_ExceptionInvalid3()
         {
-            Assert.ThrowsException<FormatException>(() => DiscoveryTools.ObtainBroadcastAddress(""));
+            Assert.ThrowsException<FormatException>(() => DiscoveryUtils.GetBroadcastAddress(""));
         }
 
         [TestMethod()]
         public void GetDiscoveryPacketStrTest_Valid()
         {
-            ClientInfo inputParam = new ClientInfo() { ClientType = "windows", IpAddress = "192.168.0.2", Version = "v1" };
+            ClientInfo inputParam = new ClientInfo() { ClientType = ClientTypeEnum.windows.ToString(), IpAddress = "192.168.0.2", Version = VersionNumberEnum.v1.ToString() };
             string expected = "efsip 192.168.0.2 windows v1";
-            Assert.AreEqual(DiscoveryTools.GetDiscoveryPacketStr(inputParam), expected);
+            Assert.AreEqual(DiscoveryUtils.GetDiscoveryPacketStr(inputParam), expected);
         }
 
         [TestMethod()]
         public void GetClientInfoFromStringTest_Valid()
         {
             string input = "efsip 192.168.0.2 windows v1";
-            ClientInfo resultObj = DiscoveryTools.GetClientInfoFromString(input);
+            ClientInfo resultObj = DiscoveryUtils.GetClientInfoFromString(input);
             Assert.AreEqual(resultObj.IpAddress, "192.168.0.2");
             Assert.AreEqual(resultObj.ClientType, "windows");
             Assert.AreEqual(resultObj.Version, "v1");
@@ -59,7 +61,7 @@ namespace EFS.Utilities.Tests
         public void GetClientInfoFromStringTest_ExceptionInvalid()
         {
             string input = "efsip 192.168.0.2 windows space v1";
-            Assert.ThrowsException<MalformedUDPBroadcastException>(() => DiscoveryTools.GetClientInfoFromString(input));
+            Assert.ThrowsException<MalformedUDPBroadcastException>(() => DiscoveryUtils.GetClientInfoFromString(input));
         }
     }
 }

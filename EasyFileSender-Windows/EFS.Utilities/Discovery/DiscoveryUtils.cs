@@ -2,41 +2,17 @@
 using EFS.Global.Models;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 
-namespace EFS.Utilities
+namespace EFS.Utilities.Discovery
 {
-    public static class DiscoveryTools
+    public static class DiscoveryUtils
     { 
-        public static void SendDiscoveryPacket(string ipv4Address, int port)
-        {
-            using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
-            {
-                // Parsing ensures IP is valid
-                IPAddress serverAddr = IPAddress.Parse(ipv4Address);
-
-                string broadcastIpStr = ObtainBroadcastAddress(serverAddr.ToString());
-
-                IPAddress broadcastAdd = IPAddress.Parse(broadcastIpStr);
-
-                IPEndPoint endPoint = new IPEndPoint(broadcastAdd, port);
-
-                ClientInfo myClient = new ClientInfo() { ClientType = "windows", IpAddress = ipv4Address, Version = "v1" };
-
-                string text = GetDiscoveryPacketStr(myClient);
-                byte[] send_buffer = Encoding.ASCII.GetBytes(text);
-
-                sock.SendTo(send_buffer, endPoint);
-            }
-        }
-
         /// <summary>
         /// Replaces the last byte ( host part ) of the input IP with 255
         /// </summary>
         /// <param name="ipv4Address"></param>
         /// <returns></returns>
-        public static string ObtainBroadcastAddress(string ipv4Address)
+        public static string GetBroadcastAddress(string ipv4Address)
         {
             // Parsing ensures IP is valid
             IPAddress inputIP = IPAddress.Parse(ipv4Address);
@@ -72,6 +48,4 @@ namespace EFS.Utilities
             return toReturn;
         }
     }
-
-
 }

@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ClientTypeEnum.cs" />
+    <Compile Include="Enums\VersionNumberEnum.cs" />
     <Compile Include="Exceptions\MalformedUDPBroadcastException.cs" />
     <Compile Include="Models\ClientInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

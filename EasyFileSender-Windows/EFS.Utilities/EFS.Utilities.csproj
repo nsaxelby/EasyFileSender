@@ -41,7 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiscoveryTools.cs" />
+    <Compile Include="Discovery\DiscoveryAdvertiser.cs" />
+    <Compile Include="Discovery\DiscoveryListener.cs" />
+    <Compile Include="Discovery\DiscoveryService.cs" />
+    <Compile Include="Discovery\DiscoveryUtils.cs" />
     <Compile Include="EnvironmentTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
