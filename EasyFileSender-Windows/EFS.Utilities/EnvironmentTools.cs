@@ -1,7 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Microsoft.WindowsAPICodePack.Shell;
 
 namespace EFS.Utilities
 {
@@ -13,10 +14,10 @@ namespace EFS.Utilities
             IPAddress ipAddress = ipHostEntry.AddressList.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork);
             return ipAddress.ToString();
         }
-
-        public static string GetMyDownloadsFolder()
+        // Possible TODO here, should we defalt to Downloads? Or should we keep it within the eexecuting directory for simplicity and separation
+        public static string GetDownloadsFolder()
         {
-            return KnownFolders.Downloads.Path;
+            return Path.Combine(Environment.CurrentDirectory, "Downloads");
         }
     }
 }

@@ -21,6 +21,7 @@ namespace EFS.WindowsFormApp
         private FTPServerService _ftpServerService;
         private int _port = 3008;
         private BindingList<ClientInfoViewModelListItem> _clientList = new BindingList<ClientInfoViewModelListItem>();
+        private string _downloadsDirectory;
 
         public EFSForm()
         {
@@ -44,7 +45,8 @@ namespace EFS.WindowsFormApp
             _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
             _discoveryService.StartDiscoveryService();
 
-            _ftpServerService = new FTPServerService(EnvironmentTools.GetMyDownloadsFolder(), 21);
+            _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
+            _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
             _ftpServerService.StartService();
         }
 
