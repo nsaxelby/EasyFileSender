@@ -2,12 +2,15 @@
 using EFS.Global.Models;
 using EFS.Utilities;
 using EFS.Utilities.Discovery;
+using EFS.Utilities.FileTransfer;
 using EFS.WindowsFormApp.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace EFS.WindowsFormApp
@@ -16,8 +19,11 @@ namespace EFS.WindowsFormApp
     {
         private string _myIpAddress;
         private DiscoveryService _discoveryService;
+        private FTPServerService _ftpServerService;
+        private SendFileService _sendFileService;
         private int _port = 3008;
         private BindingList<ClientInfoViewModelListItem> _clientList = new BindingList<ClientInfoViewModelListItem>();
+        private string _downloadsDirectory;
 
         public EFSForm()
         {
@@ -40,6 +46,12 @@ namespace EFS.WindowsFormApp
 
             _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
             _discoveryService.StartDiscoveryService();
+
+            _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
+            _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
+            _ftpServerService.StartService();
+
+            _sendFileService = new SendFileService();
         }
 
         private void LoadIpAddressLabel()
@@ -58,6 +70,8 @@ namespace EFS.WindowsFormApp
         private void EFSForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _discoveryService.StopDiscoveryService();
+            _ftpServerService.StopService();
+            _sendFileService.StopAllThreads();
         }
 
         private void OnRecievedClientData(ClientInfo clientInfo)
@@ -69,6 +83,58 @@ namespace EFS.WindowsFormApp
                     _clientList.Add(new ClientInfoViewModelListItem(clientInfo, string.Equals(_myIpAddress, clientInfo.IpAddress)));
                 }
             }));           
+        }
+
+        public void DrawSelectedClient()
+        {
+            if(clientListBox.SelectedItem != null)
+            {
+                ClientInfoViewModelListItem clientObjectSelected = (ClientInfoViewModelListItem)clientListBox.SelectedItem;
+                if(clientObjectSelected.IsSelfClient)
+                {
+                    selectedIpLabel.Text = "You: " + clientObjectSelected.IpAddress + " - Receiving Files";
+                    sendFileButton.Visible = false;
+                    transfersPanel.Size = new System.Drawing.Size(transfersPanel.Size.Width, this.Size.Height - 89);
+                }
+                else
+                {
+                    selectedIpLabel.Text = clientObjectSelected.IpAddress;
+                    sendFileButton.Visible = true;
+                    transfersPanel.Size = new System.Drawing.Size(transfersPanel.Size.Width, this.Size.Height - 118);
+                }
+            }
+        }
+
+        private void ClientListBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            DrawSelectedClient();
+        }
+
+        private void SendFileButton_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    long fileSizeBytes = 0;
+                    fileSizeBytes = new FileInfo(ofd.FileName).Length;
+
+                    try
+                    {
+                        Guid guid = Guid.NewGuid();
+                        _sendFileService.StartNewTransferThread(guid, selectedIpLabel.Text, ofd.FileName, fileSizeBytes, OnFileTransferStatusChanged);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error Starting Transfer: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        private void OnFileTransferStatusChanged(FileTransferStatus fileTransferStatus)
+        {
+            Debug.WriteLine("Transfer guid: " + fileTransferStatus.TransferID.ToString() + " + file : " + fileTransferStatus.SourceFile + " percentage: " + fileTransferStatus.Progress.ToString("00.00"));
         }
     }
 }

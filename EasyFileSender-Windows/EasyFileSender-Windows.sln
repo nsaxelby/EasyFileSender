@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.960
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.WindowsFormApp", "EFS.WindowsFormApp\EFS.WindowsFormApp.csproj", "{E1EBED9F-3A96-4226-A9D9-FA109C6FB221}"
 EndProject

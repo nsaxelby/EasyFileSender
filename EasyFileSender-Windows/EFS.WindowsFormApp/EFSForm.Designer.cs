@@ -32,13 +32,17 @@
             this.clientListBox = new EFS.WindowsFormApp.ClientListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.transfersPanel = new System.Windows.Forms.Panel();
             this.yourIPLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.selectedIpLabel = new System.Windows.Forms.Label();
+            this.sendFileButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -71,6 +75,7 @@
             this.clientListBox.Name = "clientListBox";
             this.clientListBox.Size = new System.Drawing.Size(225, 382);
             this.clientListBox.TabIndex = 0;
+            this.clientListBox.SelectedValueChanged += new System.EventHandler(this.ClientListBox_SelectedValueChanged);
             // 
             // label1
             // 
@@ -92,16 +97,16 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Your IP: ";
             // 
-            // panel2
+            // transfersPanel
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.transfersPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Location = new System.Drawing.Point(244, 38);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(544, 400);
-            this.panel2.TabIndex = 3;
+            this.transfersPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.transfersPanel.Location = new System.Drawing.Point(244, 38);
+            this.transfersPanel.Name = "transfersPanel";
+            this.transfersPanel.Size = new System.Drawing.Size(544, 371);
+            this.transfersPanel.TabIndex = 3;
             // 
             // yourIPLabel
             // 
@@ -143,15 +148,49 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Type";
             // 
+            // panel4
+            // 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(136)))), ((int)(((byte)(199)))));
+            this.panel4.Controls.Add(this.selectedIpLabel);
+            this.panel4.Location = new System.Drawing.Point(244, 38);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(544, 26);
+            this.panel4.TabIndex = 1;
+            // 
+            // selectedIpLabel
+            // 
+            this.selectedIpLabel.AutoSize = true;
+            this.selectedIpLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectedIpLabel.Location = new System.Drawing.Point(11, 6);
+            this.selectedIpLabel.Name = "selectedIpLabel";
+            this.selectedIpLabel.Size = new System.Drawing.Size(73, 13);
+            this.selectedIpLabel.TabIndex = 1;
+            this.selectedIpLabel.Text = "Selected IP";
+            // 
+            // sendFileButton
+            // 
+            this.sendFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.sendFileButton.Location = new System.Drawing.Point(244, 415);
+            this.sendFileButton.Name = "sendFileButton";
+            this.sendFileButton.Size = new System.Drawing.Size(155, 23);
+            this.sendFileButton.TabIndex = 5;
+            this.sendFileButton.Text = "Send File";
+            this.sendFileButton.UseVisualStyleBackColor = true;
+            this.sendFileButton.Click += new System.EventHandler(this.SendFileButton_Click);
+            // 
             // EFSForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.sendFileButton);
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.yourIPLabel);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.transfersPanel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
@@ -162,6 +201,8 @@
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,12 +213,15 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel transfersPanel;
         private System.Windows.Forms.Label yourIPLabel;
         private ClientListBox clientListBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label selectedIpLabel;
+        private System.Windows.Forms.Button sendFileButton;
     }
 }
 
