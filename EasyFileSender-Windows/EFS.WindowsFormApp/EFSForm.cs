@@ -6,6 +6,7 @@ using EFS.Utilities.FileTransfer;
 using EFS.WindowsFormApp.ViewModels;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,7 @@ namespace EFS.WindowsFormApp
         private string _myIpAddress;
         private DiscoveryService _discoveryService;
         private FTPServerService _ftpServerService;
+        private SendFileService _sendFileService;
         private int _port = 3008;
         private BindingList<ClientInfoViewModelListItem> _clientList = new BindingList<ClientInfoViewModelListItem>();
         private string _downloadsDirectory;
@@ -48,6 +50,8 @@ namespace EFS.WindowsFormApp
             _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
             _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
             _ftpServerService.StartService();
+
+            _sendFileService = new SendFileService();
         }
 
         private void LoadIpAddressLabel()
@@ -67,6 +71,7 @@ namespace EFS.WindowsFormApp
         {
             _discoveryService.StopDiscoveryService();
             _ftpServerService.StopService();
+            _sendFileService.StopAllThreads();
         }
 
         private void OnRecievedClientData(ClientInfo clientInfo)
@@ -111,26 +116,25 @@ namespace EFS.WindowsFormApp
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    // Get the object used to communicate with the server.
-                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + selectedIpLabel.Text);
-                    request.Method = WebRequestMethods.Ftp.UploadFile;
+                    long fileSizeBytes = 0;
+                    fileSizeBytes = new FileInfo(ofd.FileName).Length;
 
-                    // This example assumes the FTP site uses anonymous logon.
-                    request.Credentials = new NetworkCredential("anonymous", "anon@anon.com");
-
-                    // Copy the contents of the file to the request stream.
-                    using (StreamReader sourceStream = new StreamReader(ofd.FileName))
-                    using (Stream ftpStream = request.GetRequestStream())
+                    try
                     {
-                        sourceStream.BaseStream.CopyTo(ftpStream);
+                        Guid guid = Guid.NewGuid();
+                        _sendFileService.StartNewTransferThread(guid, selectedIpLabel.Text, ofd.FileName, fileSizeBytes, OnFileTransferStatusChanged);
                     }
-
-                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                        MessageBox.Show("Error Starting Transfer: " + ex.Message);
                     }
                 }
             }
+        }
+
+        private void OnFileTransferStatusChanged(FileTransferStatus fileTransferStatus)
+        {
+            Debug.WriteLine("Transfer guid: " + fileTransferStatus.TransferID.ToString() + " + file : " + fileTransferStatus.SourceFile + " percentage: " + fileTransferStatus.Progress.ToString("00.00"));
         }
     }
 }

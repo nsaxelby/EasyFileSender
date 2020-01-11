@@ -125,7 +125,9 @@
     <Compile Include="Discovery\DiscoveryService.cs" />
     <Compile Include="Discovery\DiscoveryUtils.cs" />
     <Compile Include="EnvironmentTools.cs" />
+    <Compile Include="FileTransfer\FileSendTransferThread.cs" />
     <Compile Include="FileTransfer\FTPServerService.cs" />
+    <Compile Include="FileTransfer\SendFileService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

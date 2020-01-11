@@ -28,9 +28,9 @@ namespace EFS.Utilities.FileTransfer
                 .EnableAnonymousAuthentication()); // allow anonymous logins
 
             // Configure the FTP server
+            // Listen on all addresses
             services.Configure<FtpServerOptions>(opt =>
             {
-                opt.ServerAddress = "127.0.0.1";
                 opt.Port = _port;
             });
 
