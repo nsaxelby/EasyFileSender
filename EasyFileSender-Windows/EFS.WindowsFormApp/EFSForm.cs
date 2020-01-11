@@ -2,10 +2,14 @@
 using EFS.Global.Models;
 using EFS.Utilities;
 using EFS.Utilities.Discovery;
+using EFS.Utilities.FileTransfer;
 using EFS.WindowsFormApp.ViewModels;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace EFS.WindowsFormApp
@@ -14,6 +18,7 @@ namespace EFS.WindowsFormApp
     {
         private string _myIpAddress;
         private DiscoveryService _discoveryService;
+        private FTPServerService _ftpServerService;
         private int _port = 3008;
         private BindingList<ClientInfoViewModelListItem> _clientList = new BindingList<ClientInfoViewModelListItem>();
 
@@ -38,6 +43,9 @@ namespace EFS.WindowsFormApp
 
             _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
             _discoveryService.StartDiscoveryService();
+
+            _ftpServerService = new FTPServerService(EnvironmentTools.GetMyDownloadsFolder(), 21);
+            _ftpServerService.StartService();
         }
 
         private void LoadIpAddressLabel()
@@ -56,6 +64,7 @@ namespace EFS.WindowsFormApp
         private void EFSForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _discoveryService.StopDiscoveryService();
+            _ftpServerService.StopService();
         }
 
         private void OnRecievedClientData(ClientInfo clientInfo)
@@ -92,6 +101,34 @@ namespace EFS.WindowsFormApp
         private void ClientListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             DrawSelectedClient();
+        }
+
+        private void SendFileButton_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    // Get the object used to communicate with the server.
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + selectedIpLabel.Text);
+                    request.Method = WebRequestMethods.Ftp.UploadFile;
+
+                    // This example assumes the FTP site uses anonymous logon.
+                    request.Credentials = new NetworkCredential("anonymous", "anon@anon.com");
+
+                    // Copy the contents of the file to the request stream.
+                    using (StreamReader sourceStream = new StreamReader(ofd.FileName))
+                    using (Stream ftpStream = request.GetRequestStream())
+                    {
+                        sourceStream.BaseStream.CopyTo(ftpStream);
+                    }
+
+                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    {
+                        Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    }
+                }
+            }
         }
     }
 }
