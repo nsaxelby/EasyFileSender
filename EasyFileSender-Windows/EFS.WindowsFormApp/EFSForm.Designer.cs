@@ -41,7 +41,7 @@
             this.sendFileButton = new System.Windows.Forms.Button();
             this.dragAndDropPanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
-            this.transfersListBox1 = new EFS.WindowsFormApp.Controls.TransfersListBox();
+            this.transfersListBox = new EFS.WindowsFormApp.Controls.TransfersListBox();
             this.clientListBox = new EFS.WindowsFormApp.ClientListBox();
             this.panel1.SuspendLayout();
             this.transfersPanel.SuspendLayout();
@@ -87,7 +87,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.transfersPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.transfersPanel.Controls.Add(this.transfersListBox1);
+            this.transfersPanel.Controls.Add(this.transfersListBox);
             this.transfersPanel.Location = new System.Drawing.Point(244, 38);
             this.transfersPanel.Name = "transfersPanel";
             this.transfersPanel.Size = new System.Drawing.Size(544, 371);
@@ -189,21 +189,26 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "Drag and Drop file here to send";
             // 
-            // transfersListBox1
+            // transfersListBox
             // 
-            this.transfersListBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.transfersListBox1.FormattingEnabled = true;
-            this.transfersListBox1.ItemHeight = 75;
-            this.transfersListBox1.Items.AddRange(new object[] {
+            this.transfersListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.transfersListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.transfersListBox.FormattingEnabled = true;
+            this.transfersListBox.IntegralHeight = false;
+            this.transfersListBox.ItemHeight = 75;
+            this.transfersListBox.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4",
             "5"});
-            this.transfersListBox1.Location = new System.Drawing.Point(-1, 22);
-            this.transfersListBox1.Name = "transfersListBox1";
-            this.transfersListBox1.Size = new System.Drawing.Size(548, 304);
-            this.transfersListBox1.TabIndex = 0;
+            this.transfersListBox.Location = new System.Drawing.Point(-1, 22);
+            this.transfersListBox.Name = "transfersListBox";
+            this.transfersListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.transfersListBox.Size = new System.Drawing.Size(548, 348);
+            this.transfersListBox.TabIndex = 0;
             // 
             // clientListBox
             // 
@@ -275,7 +280,7 @@
         private System.Windows.Forms.Button sendFileButton;
         private System.Windows.Forms.Panel dragAndDropPanel;
         private System.Windows.Forms.Label label5;
-        private Controls.TransfersListBox transfersListBox1;
+        private Controls.TransfersListBox transfersListBox;
     }
 }
 

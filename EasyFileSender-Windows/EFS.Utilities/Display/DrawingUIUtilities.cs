@@ -27,10 +27,20 @@ namespace EFS.Utilities
 
         public static string ConvertProgressIntoProgressString(long bytesDoneSoFar, long totalFileSizeBytes, double progressPercentage)
         {
-            // MB, file size, so we div by 1024 rather than 1k ( as with network speeds )
-            double doneSoFarMB = bytesDoneSoFar / 1024 / 1024;
-            double totalFileSizeMB = totalFileSizeBytes / 1024 / 1024;
-            return doneSoFarMB.ToString("0.0") + "/" + totalFileSizeMB.ToString("0.0") + " MB (" + progressPercentage.ToString("0") + "%)"; 
+            // If it's under 2 MB, show as KBs
+            if (totalFileSizeBytes < 1024 * 1024 * 2)
+            {
+                double doneSoFarKB = bytesDoneSoFar / 1024;
+                double totalFileSizeKB = totalFileSizeBytes  / 1024;
+                return doneSoFarKB.ToString("0.0") + "/" + totalFileSizeKB.ToString("0.0") + " KB (" + progressPercentage.ToString("0") + "%)";
+            }
+            else
+            {
+                // MB, file size, so we div by 1024 rather than 1k ( as with network speeds )
+                double doneSoFarMB = bytesDoneSoFar / 1024 / 1024;
+                double totalFileSizeMB = totalFileSizeBytes / 1024 / 1024;
+                return doneSoFarMB.ToString("0.0") + "/" + totalFileSizeMB.ToString("0.0") + " MB (" + progressPercentage.ToString("0") + "%)";
+            }
         }
 
         public static int GetPixelsWidthToDraw(int pixelsParentBar, double percentage)

@@ -21,6 +21,7 @@ namespace EFS.WindowsFormApp
         private SendFileService _sendFileService;
         private int _port = 3008;
         private BindingList<ClientInfoViewModelListItem> _clientList = new BindingList<ClientInfoViewModelListItem>();
+        private BindingList<FileTransferStatus> _selectedClientTransferList = new BindingList<FileTransferStatus>();
         private string _downloadsDirectory;
 
         public EFSForm()
@@ -31,6 +32,8 @@ namespace EFS.WindowsFormApp
         private void EFSForm_Load(object sender, EventArgs e)
         {
             clientListBox.DataSource = _clientList;
+            transfersListBox.DataSource = _selectedClientTransferList;
+            _selectedClientTransferList.ListChanged += _selectedClientTransferList_ListChanged;
             LoadIpAddressLabel();
 
             // Add my client to top of list
@@ -50,6 +53,12 @@ namespace EFS.WindowsFormApp
             _ftpServerService.StartService();
 
             _sendFileService = new SendFileService();
+        }
+
+        private void _selectedClientTransferList_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            // TODO, is there a better way to do this?
+            transfersListBox.Invalidate();
         }
 
         private void LoadIpAddressLabel()
@@ -90,6 +99,7 @@ namespace EFS.WindowsFormApp
                 ClientInfoViewModelListItem clientObjectSelected = (ClientInfoViewModelListItem)clientListBox.SelectedItem;
                 if(clientObjectSelected.IsSelfClient)
                 {
+                    _selectedClientTransferList.Clear();
                     selectedIpLabel.Text = "You: " + clientObjectSelected.IpAddress + " - Receiving Files";
                     sendFileButton.Visible = false;
                     dragAndDropPanel.Visible = false;
@@ -98,10 +108,24 @@ namespace EFS.WindowsFormApp
                 else
                 {
                     selectedIpLabel.Text = clientObjectSelected.IpAddress;
+                    AddSelectedClientTransfersToBindingList(clientObjectSelected.IpAddress);
                     sendFileButton.Visible = true;
                     dragAndDropPanel.Visible = true;
                     transfersPanel.Size = new System.Drawing.Size(transfersPanel.Size.Width, this.Size.Height - 118);
                 }
+            }
+            else
+            {
+                _selectedClientTransferList.Clear();
+            }
+        }
+
+        private void AddSelectedClientTransfersToBindingList(string destinationIP)
+        {
+            _selectedClientTransferList.Clear();
+            foreach (FileTransferStatus clientTransfers in _sendFileService.GetTransfersByDestIP(destinationIP))
+            {
+                _selectedClientTransferList.Add(clientTransfers);
             }
         }
 
@@ -142,7 +166,7 @@ namespace EFS.WindowsFormApp
                     string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                     foreach (var FilesDroppedName in files)
                     {
-                        Guid returnedGuid = CommonTransfer(FilesDroppedName);
+                        CommonTransfer(FilesDroppedName);
                     }
                 }
                 catch (Exception ex)
@@ -152,13 +176,11 @@ namespace EFS.WindowsFormApp
             }
         }
 
-        private Guid CommonTransfer(string fileName)
+        private void CommonTransfer(string fileName)
         {
             long fileSizeBytes = 0;
             fileSizeBytes = new FileInfo(fileName).Length;
-            Guid guid = Guid.NewGuid();
-            _sendFileService.StartNewTransferThread(guid, selectedIpLabel.Text, fileName, fileSizeBytes, OnFileTransferStatusChanged);
-            return guid;
+            _selectedClientTransferList.Add(_sendFileService.StartNewTransferThread(selectedIpLabel.Text, fileName, fileSizeBytes, OnFileTransferStatusChanged));
         }
 
         private void DragAndDropPanel_DragEnter(object sender, DragEventArgs e)

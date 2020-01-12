@@ -50,6 +50,12 @@ namespace EFS.WindowsFormApp.Controls
                 {
                     Color backgroundColorObj = StaticColors.lightGreyColor;
                     DrawItemState drawItemState = e.State;
+                    // This prevents selections
+                    if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                    {
+                        // BackColor is not a settable property, so we need to new a DrawItemEventArgs
+                        drawItemState = drawItemState ^ DrawItemState.Selected;
+                    }
 
                     e = new DrawItemEventArgs(e.Graphics,
                           e.Font,
