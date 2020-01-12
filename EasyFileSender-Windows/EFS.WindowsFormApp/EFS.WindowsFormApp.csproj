@@ -46,11 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientListBox.cs">
+    <Compile Include="Controls\ClientListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ClientListBox.Designer.cs">
+    <Compile Include="Controls\ClientListBox.Designer.cs">
       <DependentUpon>ClientListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\StaticColors.cs" />
+    <Compile Include="Controls\TransfersListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TransfersListBox.Designer.cs">
+      <DependentUpon>TransfersListBox.cs</DependentUpon>
     </Compile>
     <Compile Include="EFSForm.cs">
       <SubType>Form</SubType>

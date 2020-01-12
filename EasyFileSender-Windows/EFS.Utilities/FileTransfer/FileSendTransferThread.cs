@@ -12,7 +12,8 @@ namespace EFS.Utilities.FileTransfer
         private readonly OnFileTransferStatusChanged _statusUpdateDelegateMethod;
         private readonly string _destinationIP;
         private readonly string _sourceFile;
-        private FileTransferStatus _transferStatus;
+        public FileTransferStatus TransferStatus { get; set; }
+
         private Thread _transferThread;
         private bool _stopTransfer = false;
 
@@ -23,14 +24,13 @@ namespace EFS.Utilities.FileTransfer
             _destinationIP = destinationIP;
             _sourceFile = sourceFile;
             _statusUpdateDelegateMethod = onFileTransferStatusChangedDelegate;
-            _transferStatus = new FileTransferStatus()
+            TransferStatus = new FileTransferStatus()
             {
                 TransferID = transferID,
                 DestinationIP = destinationIP,
                 SourceFile = sourceFile,
                 Complete = false,
                 FileSizeBytes = fileSizeBytes,
-                Progress = 0,
                 TransferredSizeBytes = 0,
                 Exception = null,
                 Successful = false
@@ -85,27 +85,27 @@ namespace EFS.Utilities.FileTransfer
 
                 var buffer = new byte[1024 * 1024];
                 int readBytesCount;
+                TransferStatus.DateTimeStarted = DateTime.UtcNow;
                 using (FileStream sourceStream = File.OpenRead(_sourceFile))
                 using (Stream ftpStream = request.GetRequestStream())
                 {
-                    _transferStatus.FileSizeBytes = sourceStream.Length;
-                    _transferStatus.TransferredSizeBytes = 0;
+                    TransferStatus.FileSizeBytes = sourceStream.Length;
+                    TransferStatus.TransferredSizeBytes = 0;
                     while (((readBytesCount = sourceStream.Read(buffer, 0, buffer.Length)) > 0) && _stopTransfer == false)
                     {
                         ftpStream.Write(buffer, 0, readBytesCount);
-                        _transferStatus.TransferredSizeBytes += readBytesCount;
-                        _transferStatus.Progress = _transferStatus.TransferredSizeBytes * 100.0 / _transferStatus.FileSizeBytes;
-                        _statusUpdateDelegateMethod(_transferStatus);
+                        TransferStatus.TransferredSizeBytes += readBytesCount;                        
+                        _statusUpdateDelegateMethod(TransferStatus);
                     }
                 }
-                _transferStatus.Complete = true;
-                _transferStatus.Successful = true;
+                TransferStatus.Complete = true;
+                TransferStatus.Successful = true;
             }
             catch (Exception ex)
             {
-                _transferStatus.Complete = true;
-                _transferStatus.Successful = false;
-                _transferStatus.Exception = ex;
+                TransferStatus.Complete = true;
+                TransferStatus.Successful = false;
+                TransferStatus.Exception = ex;
             }
         }
 

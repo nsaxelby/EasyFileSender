@@ -1,23 +1,26 @@
-﻿using System;
+﻿using EFS.Global.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using static EFS.Utilities.FileTransfer.FileSendTransferThread;
 
 namespace EFS.Utilities.FileTransfer
 {
     public class SendFileService
     {
+        
         private readonly List<FileSendTransferThread> _transferThreads = new List<FileSendTransferThread>();
         public SendFileService()
         {
 
         }
 
-        public bool StartNewTransferThread(Guid transferID, string destinationIP, string sourceFile, long fileSizeBytes, OnFileTransferStatusChanged onFileTransferStatusChanged)
+        public FileTransferStatus StartNewTransferThread(string destinationIP, string sourceFile, long fileSizeBytes, OnFileTransferStatusChanged onFileTransferStatusChanged)
         {
-            FileSendTransferThread fileSendTransferThread = new FileSendTransferThread(transferID, destinationIP, sourceFile, fileSizeBytes, onFileTransferStatusChanged);
+            FileSendTransferThread fileSendTransferThread = new FileSendTransferThread(Guid.NewGuid(), destinationIP, sourceFile, fileSizeBytes, onFileTransferStatusChanged);
             fileSendTransferThread.StartTransfer();
             _transferThreads.Add(fileSendTransferThread);
-            return true;
+            return fileSendTransferThread.TransferStatus;
         }
 
         // Blocking Thread
@@ -28,6 +31,11 @@ namespace EFS.Utilities.FileTransfer
                 transferThreads.StopTransfer();
             }
             return true;
+        }
+
+        public List<FileTransferStatus> GetTransfersByDestIP(string ipAddress)
+        {
+            return _transferThreads.Where(a => a.TransferStatus.DestinationIP == ipAddress).Select(a => a.TransferStatus).ToList();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using EFS.Global.Enums;
+using EFS.Utilities;
+using EFS.WindowsFormApp.Controls;
 using EFS.WindowsFormApp.ViewModels;
 using System;
 using System.Drawing;
@@ -10,10 +12,6 @@ namespace EFS.WindowsFormApp
 {
     public partial class ClientListBox : ListBox
     {
-        private Color yellowColor = Color.FromArgb(255, 254, 209);
-        private Color darkGreyColor = Color.FromArgb(153, 153, 153);
-        private Color lightGreyColor = Color.FromArgb(204, 204, 204);
-
         public ClientListBox()
         {
             DrawMode = DrawMode.OwnerDrawFixed;
@@ -61,16 +59,16 @@ namespace EFS.WindowsFormApp
                     if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
                     {
                         // BackColor is not a settable property, so we need to new a DrawItemEventArgs
-                        backgroundColorObj = yellowColor;
+                        backgroundColorObj = StaticColors.yellowColor;
                         drawItemState = drawItemState ^ DrawItemState.Selected;
                     }
                     else if (ciObj.IsSelfClient)
                     {
-                        backgroundColorObj = darkGreyColor;
+                        backgroundColorObj = StaticColors.darkGreyColor;
                     }
                     else
                     {
-                        backgroundColorObj = lightGreyColor;
+                        backgroundColorObj = StaticColors.lightGreyColor;
                     }
 
                     e = new DrawItemEventArgs(e.Graphics,
@@ -87,7 +85,7 @@ namespace EFS.WindowsFormApp
                     var textRect = e.Bounds;
                     textRect.X += 1;
                     string textToDisplay = ciObj.IsSelfClient ? "You: " + ciObj.IpAddress : ciObj.IpAddress;
-                    textRect.Width = GetWidthFromFontText(e.Font, textToDisplay, e);
+                    textRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
                     TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, textRect, e.ForeColor, flags);
 
                     // Icon
@@ -105,12 +103,7 @@ namespace EFS.WindowsFormApp
             }
         }
 
-        private static int GetWidthFromFontText(Font stringFont, string stringToMeasure, DrawItemEventArgs e)
-        { 
-            SizeF stringSize = new SizeF();
-            stringSize = e.Graphics.MeasureString(stringToMeasure, stringFont);
-            return (int)Math.Round(stringSize.Width);
-        }
+
 
         // Source: https://stackoverflow.com/questions/23010910/how-to-retrieve-a-jpg-image-using-getmanifestresourcestream-method
         public static Stream ExtractResourceFile(Assembly assembly, String fileName)
