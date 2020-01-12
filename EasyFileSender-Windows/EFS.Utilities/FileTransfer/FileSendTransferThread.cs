@@ -30,7 +30,6 @@ namespace EFS.Utilities.FileTransfer
                 SourceFile = sourceFile,
                 Complete = false,
                 FileSizeBytes = fileSizeBytes,
-                Progress = 0,
                 TransferredSizeBytes = 0,
                 Exception = null,
                 Successful = false
@@ -85,6 +84,7 @@ namespace EFS.Utilities.FileTransfer
 
                 var buffer = new byte[1024 * 1024];
                 int readBytesCount;
+                _transferStatus.DateTimeStarted = DateTime.UtcNow;
                 using (FileStream sourceStream = File.OpenRead(_sourceFile))
                 using (Stream ftpStream = request.GetRequestStream())
                 {
@@ -93,8 +93,7 @@ namespace EFS.Utilities.FileTransfer
                     while (((readBytesCount = sourceStream.Read(buffer, 0, buffer.Length)) > 0) && _stopTransfer == false)
                     {
                         ftpStream.Write(buffer, 0, readBytesCount);
-                        _transferStatus.TransferredSizeBytes += readBytesCount;
-                        _transferStatus.Progress = _transferStatus.TransferredSizeBytes * 100.0 / _transferStatus.FileSizeBytes;
+                        _transferStatus.TransferredSizeBytes += readBytesCount;                        
                         _statusUpdateDelegateMethod(_transferStatus);
                     }
                 }
