@@ -40,9 +40,12 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.selectedIpLabel = new System.Windows.Forms.Label();
             this.sendFileButton = new System.Windows.Forms.Button();
+            this.dragAndDropPanel = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.dragAndDropPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -180,12 +183,38 @@
             this.sendFileButton.UseVisualStyleBackColor = true;
             this.sendFileButton.Click += new System.EventHandler(this.SendFileButton_Click);
             // 
+            // dragAndDropPanel
+            // 
+            this.dragAndDropPanel.AllowDrop = true;
+            this.dragAndDropPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dragAndDropPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(136)))), ((int)(((byte)(199)))));
+            this.dragAndDropPanel.Controls.Add(this.label5);
+            this.dragAndDropPanel.Location = new System.Drawing.Point(406, 416);
+            this.dragAndDropPanel.Name = "dragAndDropPanel";
+            this.dragAndDropPanel.Size = new System.Drawing.Size(382, 22);
+            this.dragAndDropPanel.TabIndex = 6;
+            this.dragAndDropPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragAndDropPanel_DragDrop);
+            this.dragAndDropPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragAndDropPanel_DragEnter);
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(109, 4);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(155, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Drag and Drop file here to send";
+            // 
             // EFSForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.dragAndDropPanel);
             this.Controls.Add(this.sendFileButton);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
@@ -203,6 +232,8 @@
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.dragAndDropPanel.ResumeLayout(false);
+            this.dragAndDropPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -222,6 +253,8 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label selectedIpLabel;
         private System.Windows.Forms.Button sendFileButton;
+        private System.Windows.Forms.Panel dragAndDropPanel;
+        private System.Windows.Forms.Label label5;
     }
 }
 
