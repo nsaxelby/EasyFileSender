@@ -48,6 +48,7 @@ namespace EFS.WindowsFormApp.Controls
 
                 if (ftsObj != null)
                 {
+
                     Color backgroundColorObj = StaticColors.lightGreyColor;
                     DrawItemState drawItemState = e.State;
                     // This prevents selections
@@ -136,6 +137,49 @@ namespace EFS.WindowsFormApp.Controls
                     progressValueRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
                     progressValueRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
                     TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, progressValueRect, e.ForeColor, flags);
+
+                    // Failed message
+                    if (ftsObj.Exception != null)
+                    {
+                        // Label
+                        Rectangle errorLabelRect = e.Bounds;
+                        errorLabelRect.X = progressValueRect.X + progressValueRect.Width + 10;
+                        errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
+                        textToDisplay = "Failed:";
+                        errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        errorLabelRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, errorLabelRect, Color.DarkRed, flags);
+                        // Value
+                        Rectangle errorValueRect = e.Bounds;
+                        errorValueRect.X = errorLabelRect.X + errorLabelRect.Width + 1;
+                        errorValueRect.Y = errorLabelRect.Y;
+                        textToDisplay = ftsObj.Exception.Message;
+                        errorValueRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        errorValueRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, errorValueRect, e.ForeColor, flags);
+                    }
+                    else if(ftsObj.Complete && ftsObj.Successful)
+                    {
+                        // Label
+                        Rectangle errorLabelRect = e.Bounds;
+                        errorLabelRect.X = progressValueRect.X + progressValueRect.Width + 10;
+                        errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
+                        textToDisplay = "Complete";
+                        errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        errorLabelRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, errorLabelRect, Color.Green, flags);
+                    }
+                    else
+                    {
+                        // Label
+                        Rectangle errorLabelRect = e.Bounds;
+                        errorLabelRect.X = progressValueRect.X + progressValueRect.Width + 10;
+                        errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
+                        textToDisplay = "Processing";
+                        errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        errorLabelRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, errorLabelRect, Color.Orange, flags);
+                    }
 
                     // Progress Bar
                     // Background
