@@ -5,6 +5,7 @@ using EFS.Utilities.Discovery;
 using EFS.Utilities.FileTransfer;
 using EFS.WindowsFormApp.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -34,6 +35,10 @@ namespace EFS.WindowsFormApp
             clientListBox.DataSource = _clientList;
             transfersListBox.DataSource = _selectedClientTransferList;
             _selectedClientTransferList.ListChanged += _selectedClientTransferList_ListChanged;
+
+            // Pops up a box to select adapter/network/IP to broadcast to others
+            ConfigureMyIPAddress();
+
             LoadIpAddressLabel();
 
             // Add my client to top of list
@@ -45,8 +50,11 @@ namespace EFS.WindowsFormApp
                 Version = VersionNumberEnum.v1.ToString()
             });
 
-            _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
-            _discoveryService.StartDiscoveryService();
+            if (string.IsNullOrEmpty(_myIpAddress) == false)
+            {
+                _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
+                _discoveryService.StartDiscoveryService();
+            }
 
             _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
             _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
@@ -61,24 +69,54 @@ namespace EFS.WindowsFormApp
             transfersListBox.Invalidate();
         }
 
+        private void ConfigureMyIPAddress()
+        {
+            List<IPAddressInfo> ipAddresses = EnvironmentTools.GetIPV4Addresses();
+            if(ipAddresses.Count == 0)
+            {
+                MessageBox.Show("Unable to find Network to bind to");
+                Application.Exit();
+            }
+            else if(ipAddresses.Count == 0)
+            {
+                _myIpAddress = ipAddresses[0].IpAddress;
+            }
+            else
+            {
+                // Multiple
+                using(SelectNetworkAdapterDialog snad = new SelectNetworkAdapterDialog(ipAddresses))
+                {
+                    if(snad.ShowDialog() == DialogResult.OK)
+                    {
+                        _myIpAddress = snad.SelectedIpAddress;
+                    }
+                    else
+                    {
+                        Application.Exit();
+                    }
+                }
+            }
+        }
+
         private void LoadIpAddressLabel()
         {
-            try
-            {
-                _myIpAddress = EnvironmentTools.GetMyIP4IpAddress();
-                yourIPLabel.Text = _myIpAddress;
-            }
-            catch
-            {
-                yourIPLabel.Text = "Unknown - Error getting IPV4";
-            }
+            yourIPLabel.Text = _myIpAddress;
         }
 
         private void EFSForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _discoveryService.StopDiscoveryService();
-            _ftpServerService.StopService();
-            _sendFileService.StopAllThreads();
+            if (_discoveryService != null)
+            {
+                _discoveryService.StopDiscoveryService();
+            }
+            if (_ftpServerService != null)
+            {
+                _ftpServerService.StopService();
+            }
+            if (_sendFileService != null)
+            {
+                _sendFileService.StopAllThreads();
+            }
         }
 
         private void OnRecievedClientData(ClientInfo clientInfo)
