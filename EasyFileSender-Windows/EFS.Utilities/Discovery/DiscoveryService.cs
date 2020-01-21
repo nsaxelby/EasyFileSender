@@ -19,7 +19,7 @@ namespace EFS.Utilities.Discovery
             };
 
             string broadcastAddress = DiscoveryUtils.GetBroadcastAddress(myIpAddress);
-            _discoveryAdvertiser = new DiscoveryAdvertiser(myIpAddress, broadcastAddress, port, ci, delayMs);
+            _discoveryAdvertiser = new DiscoveryAdvertiser(broadcastAddress, port, ci, delayMs);
             _discoveryListener = new DiscoveryListener(myIpAddress, port, delMethod);
         }
 

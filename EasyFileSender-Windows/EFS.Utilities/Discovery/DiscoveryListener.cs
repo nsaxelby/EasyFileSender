@@ -32,9 +32,9 @@ namespace EFS.Utilities.Discovery
             _myIpAddress = myIpAddress;
 
             // Note, I do not think the port or IP Addres of _listenEndPoint is relevant, any value can be used
-            _listenEndPoint = new IPEndPoint(IPAddress.Parse(myIpAddress), port);
+            _listenEndPoint = new IPEndPoint(IPAddress.Any, port);
             _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.ReuseAddress, true);
-            _socket.Bind(new IPEndPoint(IPAddress.Parse(myIpAddress), port));
+            _socket.Bind(new IPEndPoint(IPAddress.Any, port));
 
             _asyncCallback = ProcessRecievedPacket;
             _delegateMethod = onRecievedClientData;

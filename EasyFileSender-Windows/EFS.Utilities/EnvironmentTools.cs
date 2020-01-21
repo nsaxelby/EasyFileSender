@@ -1,19 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 namespace EFS.Utilities
 {
+    public class IPAddressInfo
+    {
+        public string IpAddress { get; set; }
+        public string AdapterDisplayLabel { get; set; }
+    }
+
     public static class EnvironmentTools
     {
-        public static string GetMyIP4IpAddress()
+        /// <summary>
+        /// Favors addresses starting with 192, so they appear first
+        /// Only displays network adapters that are "Up". Wireless802 or Ethernet.
+        /// </summary>
+        /// <returns></returns>
+        public static List<IPAddressInfo> GetIPV4Addresses()
         {
-            IPHostEntry ipHostEntry = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostEntry.AddressList.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork);
-            return ipAddress.ToString();
+            List<IPAddressInfo> toReturnNonPriorIPs = new List<IPAddressInfo>();
+            List<IPAddressInfo> toReturnPriorityList = new List<IPAddressInfo>();
+
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces().Where(a => a.OperationalStatus == OperationalStatus.Up))
+            {
+                if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                {
+                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            if(ip.Address.ToString().StartsWith("192"))
+                            {
+                                toReturnPriorityList.Add(new IPAddressInfo() { IpAddress = ip.Address.ToString(), AdapterDisplayLabel = ni.Name + " - " + ip.Address.ToString() });
+                            }
+                            else
+                            {
+                                toReturnNonPriorIPs.Add(new IPAddressInfo() { IpAddress = ip.Address.ToString(), AdapterDisplayLabel = ni.Name + " - " + ip.Address.ToString() });
+                            }
+                        }
+                    }
+                }
+            }
+            toReturnPriorityList.AddRange(toReturnNonPriorIPs);
+            return toReturnPriorityList;
         }
+
         // Possible TODO here, should we defalt to Downloads? Or should we keep it within the eexecuting directory for simplicity and separation
         public static string GetDownloadsFolder()
         {

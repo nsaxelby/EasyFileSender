@@ -21,7 +21,7 @@ namespace EFS.Utilities.Discovery
         private readonly int _delayMs;
         private readonly Stopwatch _pollStopwatch = new Stopwatch();
 
-        public DiscoveryAdvertiser(string myIpAddress, string broadcastAddress, int port, ClientInfo clientInfo, int delayMs = 5000)
+        public DiscoveryAdvertiser(string broadcastAddress, int port, ClientInfo clientInfo, int delayMs = 5000)
         {
             _delayMs = delayMs;
             _port = port;
