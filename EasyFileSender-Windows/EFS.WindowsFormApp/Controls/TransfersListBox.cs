@@ -13,6 +13,12 @@ namespace EFS.WindowsFormApp.Controls
         {
             DrawMode = DrawMode.OwnerDrawFixed;
             ItemHeight = 75;
+            this.SetStyle(
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint,
+                true);
+            this.DrawMode = DrawMode.OwnerDrawFixed;
         }
 
         protected override void OnDrawItem(DrawItemEventArgs e)
@@ -204,6 +210,30 @@ namespace EFS.WindowsFormApp.Controls
                     }
                 }
             }
+        }
+
+        // Credit to prevent flickering
+        // http://yacsharpblog.blogspot.com/2008/07/listbox-flicker.html
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Region iRegion = new Region(e.ClipRectangle);
+            e.Graphics.FillRegion(new SolidBrush(this.BackColor), iRegion);
+            if (this.Items.Count > 0)
+            {
+                for (int i = 0; i < this.Items.Count; ++i)
+                {
+                    System.Drawing.Rectangle irect = this.GetItemRectangle(i);
+                    if (e.ClipRectangle.IntersectsWith(irect))
+                    {
+                        OnDrawItem(new DrawItemEventArgs(e.Graphics, this.Font,
+                            irect, i,
+                            DrawItemState.Default, this.ForeColor,
+                            this.BackColor));
+                        iRegion.Complement(irect);
+                    }
+                }
+            }
+            base.OnPaint(e);
         }
     }
 }
