@@ -10,7 +10,7 @@ namespace EFS.Global.Models
         public Guid TransferID { get; set; }
         public String DestinationIP { get; set; }
         public string SourceFile { get; set; }
-        public double Progress { get { return TransferredSizeBytes * 100.0 / FileSizeBytes; } }
+        public double Progress { get { return _transferredSizeBytes * 100.0 / FileSizeBytes; } }
         public long FileSizeBytes { get; set; }
 
         private long _transferredSizeBytes;
@@ -56,31 +56,7 @@ namespace EFS.Global.Models
         }
         public Exception Exception { get; set; }
         public DateTime DateTimeStarted { get; set; }
-        private double _bytesPerSecond;
-        public double SpeedBytesPerSecond
-        {
-            get
-            {
-                if (DateTimeStarted != null)
-                {
-                    if (Complete == false)
-                    {
-                        TimeSpan timeElapsed = DateTime.UtcNow - DateTimeStarted;
-                        _bytesPerSecond = TransferredSizeBytes / timeElapsed.TotalSeconds;
-                        return _bytesPerSecond;
-                    }
-                    else
-                    {
-                        return _bytesPerSecond;
-                    }
-                }
-                else
-                {
-                    return 0.0;
-                }
-            }
-        }
-
+        public double SpeedBytesPerSecond { get; set; }
         protected void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
