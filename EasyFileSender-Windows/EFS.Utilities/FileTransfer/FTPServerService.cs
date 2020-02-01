@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 namespace EFS.Utilities.FileTransfer
 {
     public class FTPServerService
-    {
-        private string _localDirectory { get; set; }
-        private int _port { get; set; }
-        private IFtpServerHost _ftpHost { get; set; }
+    { 
+        private readonly string _localDirectory;
+        private readonly int _port;
+        private readonly IFtpServerHost _ftpHost;
 
         public FTPServerService(string localDirectory, int port)
         {

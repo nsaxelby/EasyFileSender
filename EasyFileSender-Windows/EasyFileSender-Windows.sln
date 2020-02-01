@@ -11,7 +11,41 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.UtilitiesTests", "EFS.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.Global", "EFS.Global\EFS.Global.csproj", "{1999BB80-7F07-4D58-AEE4-227DEC2738F0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentFTP", "..\FluentFTP\FluentFTP.csproj", "{219763F5-24E1-44BB-A297-982F884B9FD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third-party", "third-party", "{6B5F9762-EC96-4061-B341-37C11B1D22C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DotNet.Glob", "DotNet.Glob", "{56A1BF6A-2B65-4088-B31E-91D88AB1F239}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GnuSslStream", "GnuSslStream", "{0D40CBE1-4046-465D-8E45-017815CB7D09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadLine", "ReadLine", "{3E2DFE24-44A8-48E9-9367-D52798FB622D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DotNet.Glob", "..\third-party\DotNet.Glob\DotNet.Glob.shproj", "{A45290B4-20F7-48E9-8543-C69240BFB9F8}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GnuSslStream", "..\third-party\GnuSslStream\GnuSslStream.shproj", "{FD524518-E097-4AC0-AAC8-D5EA24F31545}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ReadLine", "..\third-party\ReadLine\ReadLine.shproj", "{F68F448F-E8A4-4536-9A83-12018B6294B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FubarSrc", "FubarSrc", "{3D6AAB38-8780-4141-AA21-82FBF53DDDFC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer", "..\FubarSrc\FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{AC61109B-DCC3-46F4-A982-E6E16BCFD667}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Abstractions", "..\FubarSrc\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj", "{51EF082F-6F6E-4A7F-9939-8A6F272A5457}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.DotNet", "..\FubarSrc\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{C87C4C52-31FC-4D6F-BE39-C3B95189D308}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FubarDev.FtpServer.Shared", "..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.shproj", "{52126B62-DE83-4597-A832-D144F9A5A870}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Commands", "..\FubarSrc\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj", "{498B839E-2EE6-4C9D-B115-F3A37513687C}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{52126b62-de83-4597-a832-d144f9a5a870}*SharedItemsImports = 13
+		..\third-party\DotNet.Glob\DotNet.Glob.projitems*{a45290b4-20f7-48e9-8543-c69240bfb9f8}*SharedItemsImports = 13
+		..\third-party\ReadLine\ReadLine.projitems*{f68f448f-e8a4-4536-9a83-12018b6294b0}*SharedItemsImports = 13
+		..\third-party\GnuSslStream\GnuSslStream.projitems*{fd524518-e097-4ac0-aac8-d5ea24f31545}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -33,9 +67,42 @@ Global
 		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1999BB80-7F07-4D58-AEE4-227DEC2738F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{219763F5-24E1-44BB-A297-982F884B9FD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{219763F5-24E1-44BB-A297-982F884B9FD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{219763F5-24E1-44BB-A297-982F884B9FD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{219763F5-24E1-44BB-A297-982F884B9FD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC61109B-DCC3-46F4-A982-E6E16BCFD667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC61109B-DCC3-46F4-A982-E6E16BCFD667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC61109B-DCC3-46F4-A982-E6E16BCFD667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC61109B-DCC3-46F4-A982-E6E16BCFD667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51EF082F-6F6E-4A7F-9939-8A6F272A5457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51EF082F-6F6E-4A7F-9939-8A6F272A5457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51EF082F-6F6E-4A7F-9939-8A6F272A5457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51EF082F-6F6E-4A7F-9939-8A6F272A5457}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87C4C52-31FC-4D6F-BE39-C3B95189D308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87C4C52-31FC-4D6F-BE39-C3B95189D308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87C4C52-31FC-4D6F-BE39-C3B95189D308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87C4C52-31FC-4D6F-BE39-C3B95189D308}.Release|Any CPU.Build.0 = Release|Any CPU
+		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56A1BF6A-2B65-4088-B31E-91D88AB1F239} = {6B5F9762-EC96-4061-B341-37C11B1D22C0}
+		{0D40CBE1-4046-465D-8E45-017815CB7D09} = {6B5F9762-EC96-4061-B341-37C11B1D22C0}
+		{3E2DFE24-44A8-48E9-9367-D52798FB622D} = {6B5F9762-EC96-4061-B341-37C11B1D22C0}
+		{A45290B4-20F7-48E9-8543-C69240BFB9F8} = {56A1BF6A-2B65-4088-B31E-91D88AB1F239}
+		{FD524518-E097-4AC0-AAC8-D5EA24F31545} = {0D40CBE1-4046-465D-8E45-017815CB7D09}
+		{F68F448F-E8A4-4536-9A83-12018B6294B0} = {3E2DFE24-44A8-48E9-9367-D52798FB622D}
+		{AC61109B-DCC3-46F4-A982-E6E16BCFD667} = {3D6AAB38-8780-4141-AA21-82FBF53DDDFC}
+		{51EF082F-6F6E-4A7F-9939-8A6F272A5457} = {3D6AAB38-8780-4141-AA21-82FBF53DDDFC}
+		{C87C4C52-31FC-4D6F-BE39-C3B95189D308} = {3D6AAB38-8780-4141-AA21-82FBF53DDDFC}
+		{52126B62-DE83-4597-A832-D144F9A5A870} = {3D6AAB38-8780-4141-AA21-82FBF53DDDFC}
+		{498B839E-2EE6-4C9D-B115-F3A37513687C} = {3D6AAB38-8780-4141-AA21-82FBF53DDDFC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {81FCED60-12D6-4C3B-B763-CD4EF817291A}

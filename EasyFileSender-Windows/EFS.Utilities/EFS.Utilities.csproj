@@ -31,21 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentFTP, Version=29.0.3.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentFTP.29.0.3\lib\net45\FluentFTP.dll</HintPath>
-    </Reference>
-    <Reference Include="FubarDev.FtpServer, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarDev.FtpServer.3.1.1\lib\net461\FubarDev.FtpServer.dll</HintPath>
-    </Reference>
-    <Reference Include="FubarDev.FtpServer.Abstractions, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarDev.FtpServer.Abstractions.3.1.1\lib\net461\FubarDev.FtpServer.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="FubarDev.FtpServer.Commands, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarDev.FtpServer.Commands.3.1.1\lib\net461\FubarDev.FtpServer.Commands.dll</HintPath>
-    </Reference>
-    <Reference Include="FubarDev.FtpServer.FileSystem.DotNet, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarDev.FtpServer.FileSystem.DotNet.3.1.1\lib\net461\FubarDev.FtpServer.FileSystem.DotNet.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNetCore.Http.Features, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Http.Features.2.0.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Features.dll</HintPath>
     </Reference>
@@ -138,6 +123,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FluentFTP\FluentFTP.csproj">
+      <Project>{219763f5-24e1-44bb-a297-982f884b9fd2}</Project>
+      <Name>FluentFTP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj">
+      <Project>{51ef082f-6f6e-4a7f-9939-8a6f272a5457}</Project>
+      <Name>FubarDev.FtpServer.Abstractions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj">
+      <Project>{c87c4c52-31fc-4d6f-be39-c3b95189d308}</Project>
+      <Name>FubarDev.FtpServer.FileSystem.DotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer\FubarDev.FtpServer.csproj">
+      <Project>{ac61109b-dcc3-46f4-a982-e6e16bcfd667}</Project>
+      <Name>FubarDev.FtpServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EFS.Global\EFS.Global.csproj">
       <Project>{1999BB80-7F07-4D58-AEE4-227DEC2738F0}</Project>
       <Name>EFS.Global</Name>
