@@ -5,6 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -47,6 +48,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             _flushAfterWrite = options.Value.FlushAfterWrite;
         }
 
+        public event EventHandler<FileReceivedStatus> FileDataReceived;
+
+        protected virtual void OnFileDataReceived(FileReceivedStatus e)
+        {
+            EventHandler<FileReceivedStatus> handler = FileDataReceived;
+            handler?.Invoke(this, e);
+        }
+
         /// <inheritdoc/>
         public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
@@ -58,8 +67,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             }
 
             _logger?.LogDebug("The root directory for {userName} is {rootPath}", accountInformation.FtpUser.Identity.Name, path);
+            var dotNetFS = new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize, _flushAfterWrite);
+            dotNetFS.FileDataReceived += DotNetFS_FileDataReceived;
+            return Task.FromResult<IUnixFileSystem>(dotNetFS);
+        }
 
-            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize, _flushAfterWrite));
+        private void DotNetFS_FileDataReceived(object sender, FileReceivedStatus e)
+        {
+            OnFileDataReceived(e);
         }
     }
 }

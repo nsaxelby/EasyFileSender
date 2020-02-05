@@ -66,6 +66,13 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             _flushStream = flushStream;
         }
 
+        public event EventHandler<FileReceivedStatus> FileDataReceived;
+        protected virtual void OnFileDataReceived(FileReceivedStatus e)
+        {
+            EventHandler<FileReceivedStatus> handler = FileDataReceived;
+            handler?.Invoke(this, e);
+        }
+
         /// <inheritdoc/>
         public bool SupportsNonEmptyDirectoryDelete { get; }
 
@@ -195,7 +202,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long? expectedFileSize)
+        public async Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress)
         {
             try
             {
@@ -206,12 +213,31 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 {
                     byte[] buffer = new byte[_streamBufferSize];
 
+                    FileReceivedStatus frs = new FileReceivedStatus()
+                    {
+                        Complete = false,
+                        DateTimeStarted = DateTime.Now,
+                        Exception = null,
+                        FileSizeBytes = expectedFileSize,
+                        TransferredSizeBytes = 0,
+                        SourceFile = fileName,
+                        SourceIP = remoteIPAddress,
+                        Successful = false,
+                        SpeedBytesPerSecond = 0.0,
+                        TransferID = Guid.NewGuid(),
+                    };
+
                     int totalBytesRead = 0;
                     int read;
                     while ((read = data.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         totalBytesRead += read;
                         output.Write(buffer, 0, read);
+
+                        frs.TransferredSizeBytes = totalBytesRead;
+                        frs.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(frs.DateTimeStarted, totalBytesRead);
+
+                        OnFileDataReceived(frs);
                         Console.WriteLine("Bytes written: " + totalBytesRead + " out of " + expectedFileSize);
                     }
                 }
@@ -272,6 +298,12 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             }
 
             return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry((FileInfo)item));
+        }
+
+        private static double GetBytesPerSecondFromDateTime(DateTime dateTimeStarted, long totalBytes)
+        {
+            TimeSpan timeElapsed = DateTime.Now - dateTimeStarted;
+            return totalBytes / timeElapsed.TotalSeconds;
         }
     }
 }

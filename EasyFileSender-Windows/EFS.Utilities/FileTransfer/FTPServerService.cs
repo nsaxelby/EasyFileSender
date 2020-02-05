@@ -1,11 +1,13 @@
 ﻿using FubarDev.FtpServer;
+using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace EFS.Utilities.FileTransfer
 {
     public class FTPServerService
-    { 
+    {
         private readonly string _localDirectory;
         private readonly int _port;
         private readonly IFtpServerHost _ftpHost;
@@ -18,7 +20,9 @@ namespace EFS.Utilities.FileTransfer
             // Setup dependency injection
             var services = new ServiceCollection();
 
-            services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = localDirectory);
+            services.Configure<DotNetFileSystemOptions>(opt => { 
+                opt.RootPath = localDirectory;
+            });
 
             // Add FTP server services
             // DotNetFileSystemProvider = Use the .NET file system functionality
@@ -38,6 +42,18 @@ namespace EFS.Utilities.FileTransfer
             var serviceProvider = services.BuildServiceProvider();
             // Initialize the FTP server
             _ftpHost = serviceProvider.GetRequiredService<IFtpServerHost>();
+
+            var provider = serviceProvider.GetRequiredService<IFileSystemClassFactory>();
+            if(provider.GetType() == typeof(DotNetFileSystemProvider))
+            {
+                var pp = (DotNetFileSystemProvider)provider;
+                pp.FileDataReceived += Pp_FileDataReceived;
+            }
+        }
+
+        private void Pp_FileDataReceived(object sender, FileReceivedStatus e)
+        {
+            Debug.WriteLine("Percentage progress: " + e.Progress + " file : " + e.SourceFile);
         }
 
         public bool StartService()

@@ -108,7 +108,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                             fileInfo.Directory,
                             fileInfo.FileName ?? throw new InvalidOperationException(),
                             stream,
-                            cancellationToken, null)
+                            cancellationToken,
+                            0,
+                            dataConnection.RemoteAddress.Address.ToString())
                        .ConfigureAwait(false);
                 }
                 else

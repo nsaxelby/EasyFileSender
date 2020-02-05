@@ -50,6 +50,11 @@ namespace FubarDev.FtpServer.FileSystem
             throw new NotSupportedException();
         }
 
+        public Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken)
         {

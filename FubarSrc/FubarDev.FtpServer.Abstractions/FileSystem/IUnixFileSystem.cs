@@ -118,8 +118,9 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="data">The <see cref="Stream"/> used to read the data for the new file.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="expectedFileSize">Expected file size of dest, for progress updates.</param>
+        /// <param name="remoteIPAddress">String IP of sender IP</param>
         /// <returns>an optional <see cref="IBackgroundTransfer"/> when the transfer needs to happen in the background.</returns>
-        Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long? expectedFileSize);
+        Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress);
 
         /// <summary>
         /// Replaces the contents of a file.
