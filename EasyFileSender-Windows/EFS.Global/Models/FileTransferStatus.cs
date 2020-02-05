@@ -8,7 +8,7 @@ namespace EFS.Global.Models
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Guid TransferID { get; set; }
-        public String DestinationIP { get; set; }
+        public string DestinationIP { get; set; }
         public string SourceFile { get; set; }
         public double Progress { get { return _transferredSizeBytes * 100.0 / FileSizeBytes; } }
         public long FileSizeBytes { get; set; }
