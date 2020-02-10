@@ -8,5 +8,6 @@ namespace EFS.WindowsFormApp.Controls
         public static Color darkGreyColor { get { return Color.FromArgb(153, 153, 153); } }
         public static Color lightGreyColor { get { return Color.FromArgb(204, 204, 204); } }
         public static Color darkBlueColor { get { return Color.FromArgb(83, 136, 199); } }
+        public static Color lighterBlueColor { get { return Color.FromArgb(230, 235, 255); } }
     }
 }

@@ -128,20 +128,24 @@
       <Name>FluentFTP</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj">
-      <Project>{51ef082f-6f6e-4a7f-9939-8a6f272a5457}</Project>
+      <Project>{51EF082F-6F6E-4A7F-9939-8A6F272A5457}</Project>
       <Name>FubarDev.FtpServer.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj">
-      <Project>{c87c4c52-31fc-4d6f-be39-c3b95189d308}</Project>
+      <Project>{C87C4C52-31FC-4D6F-BE39-C3B95189D308}</Project>
       <Name>FubarDev.FtpServer.FileSystem.DotNet</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer\FubarDev.FtpServer.csproj">
-      <Project>{ac61109b-dcc3-46f4-a982-e6e16bcfd667}</Project>
+      <Project>{AC61109B-DCC3-46F4-A982-E6E16BCFD667}</Project>
       <Name>FubarDev.FtpServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\EFS.Global\EFS.Global.csproj">
-      <Project>{1999BB80-7F07-4D58-AEE4-227DEC2738F0}</Project>
+      <Project>{1999bb80-7f07-4d58-aee4-227dec2738f0}</Project>
       <Name>EFS.Global</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EFS.Shared\EFS.Shared.csproj">
+      <Project>{C160B7A6-98D5-43C0-BB92-B51B5A93609F}</Project>
+      <Name>EFS.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

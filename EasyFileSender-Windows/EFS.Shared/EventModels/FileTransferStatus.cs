@@ -1,15 +1,28 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace EFS.Global.Models
+namespace EFS.Shared.EventModels
 {
-    public class FileTransferStatus : INotifyPropertyChanged
+    public interface IFileTransferStatus : INotifyPropertyChanged
+    {
+        string FileName { get; set; }
+        Guid TransferID { get; set; }
+        double Progress { get; }
+        long FileSizeBytes { get; set; }
+        long TransferredSizeBytes { get; set; }
+        bool Complete { get; set; }
+        bool Successful { get; set; }
+        Exception Exception { get; set; }
+        DateTime DateTimeStarted { get; set; }
+        double SpeedBytesPerSecond { get; set; }
+    }
+
+    public abstract class FileTransferStatus : IFileTransferStatus
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public string FileName { get; set; }
         public Guid TransferID { get; set; }
-        public string DestinationIP { get; set; }
-        public string SourceFile { get; set; }
         public double Progress { get { return _transferredSizeBytes * 100.0 / FileSizeBytes; } }
         public long FileSizeBytes { get; set; }
 
@@ -57,6 +70,7 @@ namespace EFS.Global.Models
         public Exception Exception { get; set; }
         public DateTime DateTimeStarted { get; set; }
         public double SpeedBytesPerSecond { get; set; }
+
         protected void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

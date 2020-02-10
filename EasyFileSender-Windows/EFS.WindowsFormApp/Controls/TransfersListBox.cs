@@ -1,4 +1,4 @@
-﻿using EFS.Global.Models;
+﻿using EFS.Shared.EventModels;
 using EFS.Utilities;
 using System;
 using System.Drawing;
@@ -25,15 +25,29 @@ namespace EFS.WindowsFormApp.Controls
         {
             if (e.Index >= 0)
             {
-                FileTransferStatus ftsObj = new FileTransferStatus();
+                IFileTransferStatus ftsObj;
                 if (DesignMode)
                 {
-                    ftsObj = new FileTransferStatus()
+                    // Depends on what type you want to see in the designer
+
+                    //ftsObj = new SendFileTransferStatus()
+                    //{
+                    //    Complete = false,
+                    //    DestinationIP = "192.168.0.1",
+                    //    FileSizeBytes = 951619276,
+                    //    FileName = "FileExample.mov",
+                    //    Successful = false,
+                    //    TransferID = Guid.NewGuid(),
+                    //    DateTimeStarted = DateTime.UtcNow.AddSeconds(-10),
+                    //    TransferredSizeBytes = 271809638
+                    //};
+
+                    ftsObj = new IncomingFileTransferStatus()
                     {
                         Complete = false,
-                        DestinationIP = "192.168.0.1",
+                        SourceIP = "123.123.123.123",
                         FileSizeBytes = 951619276,
-                        SourceFile = "FileExample.mov",
+                        FileName = "FileExample.mov",
                         Successful = false,
                         TransferID = Guid.NewGuid(),
                         DateTimeStarted = DateTime.UtcNow.AddSeconds(-10),
@@ -42,9 +56,13 @@ namespace EFS.WindowsFormApp.Controls
                 }
                 else
                 {
-                    if (Items[e.Index].GetType() == typeof(FileTransferStatus))
+                    if (Items[e.Index].GetType() == typeof(SendFileTransferStatus))
                     {
-                        ftsObj = (FileTransferStatus)Items[e.Index];
+                        ftsObj = (SendFileTransferStatus)Items[e.Index];
+                    }
+                    else if(Items[e.Index].GetType() == typeof(IncomingFileTransferStatus))
+                    {
+                        ftsObj = (IncomingFileTransferStatus)Items[e.Index];
                     }
                     else
                     {
@@ -54,8 +72,16 @@ namespace EFS.WindowsFormApp.Controls
 
                 if (ftsObj != null)
                 {
+                    Color backgroundColorObj;
+                    if (ftsObj.GetType() == typeof(IncomingFileTransferStatus))
+                    {
+                        backgroundColorObj = StaticColors.lighterBlueColor;
+                    }
+                    else
+                    {
+                        backgroundColorObj = StaticColors.lightGreyColor;
+                    }
 
-                    Color backgroundColorObj = StaticColors.lightGreyColor;
                     DrawItemState drawItemState = e.State;
                     // This prevents selections
                     if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
@@ -103,7 +129,7 @@ namespace EFS.WindowsFormApp.Controls
                     Rectangle fileNameValueRect = e.Bounds;
                     fileNameValueRect.X += 60;
                     fileNameValueRect.Y = fileNameLabelRect.Y;
-                    textToDisplay = Path.GetFileName(ftsObj.SourceFile);
+                    textToDisplay = Path.GetFileName(ftsObj.FileName);
                     fileNameValueRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
                     fileNameValueRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
                     TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, fileNameValueRect, e.ForeColor, flags);
@@ -125,6 +151,27 @@ namespace EFS.WindowsFormApp.Controls
                     speedValueRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
                     speedValueRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
                     TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, speedValueRect, e.ForeColor, flags);
+
+                    // Source IP ( If recieving panel )
+                    if (ftsObj.GetType() == typeof(IncomingFileTransferStatus))
+                    {
+                        // Label
+                        Rectangle sourceLabelRect = e.Bounds;
+                        sourceLabelRect.X = fileNameLabelRect.X + speedLabelRect.Width + speedValueRect.Width + 80;
+                        sourceLabelRect.Y = speedValueRect.Y;
+                        textToDisplay = "Source IP:";
+                        sourceLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        sourceLabelRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, sourceLabelRect, e.ForeColor, flags);
+                        // Value
+                        Rectangle sourceValueRect = e.Bounds;
+                        sourceValueRect.X = sourceLabelRect.X + sourceLabelRect.Width + 5;
+                        sourceValueRect.Y = speedValueRect.Y;
+                        textToDisplay = ((IncomingFileTransferStatus)ftsObj).SourceIP;
+                        sourceValueRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        sourceValueRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, sourceValueRect, e.ForeColor, flags);
+                    }
 
                     // Progress Text
                     // Label
@@ -149,7 +196,7 @@ namespace EFS.WindowsFormApp.Controls
                     {
                         // Label
                         Rectangle errorLabelRect = e.Bounds;
-                        errorLabelRect.X = progressValueRect.X + progressValueRect.Width + 10;
+                        errorLabelRect.X = fileNameLabelRect.X + speedLabelRect.Width + speedValueRect.Width + 80;
                         errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
                         textToDisplay = "Failed:";
                         errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
@@ -168,7 +215,7 @@ namespace EFS.WindowsFormApp.Controls
                     {
                         // Label
                         Rectangle errorLabelRect = e.Bounds;
-                        errorLabelRect.X = progressValueRect.X + progressValueRect.Width + 10;
+                        errorLabelRect.X = fileNameLabelRect.X + speedLabelRect.Width + speedValueRect.Width + 80;
                         errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
                         textToDisplay = "Complete";
                         errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
@@ -179,7 +226,7 @@ namespace EFS.WindowsFormApp.Controls
                     {
                         // Label
                         Rectangle errorLabelRect = e.Bounds;
-                        errorLabelRect.X = progressValueRect.X + progressValueRect.Width + 10;
+                        errorLabelRect.X = fileNameLabelRect.X + speedLabelRect.Width + speedValueRect.Width + 80;
                         errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
                         textToDisplay = "Processing";
                         errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);

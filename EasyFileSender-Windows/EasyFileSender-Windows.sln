@@ -39,6 +39,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FubarDev.FtpServer.Shared",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Commands", "..\FubarSrc\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj", "{498B839E-2EE6-4C9D-B115-F3A37513687C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.Shared", "EFS.Shared\EFS.Shared.csproj", "{C160B7A6-98D5-43C0-BB92-B51B5A93609F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{52126b62-de83-4597-a832-d144f9a5a870}*SharedItemsImports = 13
@@ -87,6 +89,10 @@ Global
 		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{498B839E-2EE6-4C9D-B115-F3A37513687C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C160B7A6-98D5-43C0-BB92-B51B5A93609F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C160B7A6-98D5-43C0-BB92-B51B5A93609F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C160B7A6-98D5-43C0-BB92-B51B5A93609F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C160B7A6-98D5-43C0-BB92-B51B5A93609F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

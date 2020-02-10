@@ -1,20 +1,23 @@
-﻿using FubarDev.FtpServer;
+﻿using EFS.Shared.EventModels;
+using FubarDev.FtpServer;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Linq;
 
 namespace EFS.Utilities.FileTransfer
 {
     public class FTPServerService
     {
-        private readonly string _localDirectory;
         private readonly int _port;
         private readonly IFtpServerHost _ftpHost;
-
+        public BindingList<IncomingFileTransferStatus> _myIncommingTransfers = new BindingList<IncomingFileTransferStatus>();
+        
         public FTPServerService(string localDirectory, int port)
         {
-            _localDirectory = localDirectory;
+            _myIncommingTransfers = new BindingList<IncomingFileTransferStatus>();
+            _myIncommingTransfers.AllowNew = true;
             _port = port;
 
             // Setup dependency injection
@@ -47,13 +50,31 @@ namespace EFS.Utilities.FileTransfer
             if(provider.GetType() == typeof(DotNetFileSystemProvider))
             {
                 var pp = (DotNetFileSystemProvider)provider;
-                pp.FileDataReceived += Pp_FileDataReceived;
+                pp.FileDataReceived += FileDataReceived;
             }
         }
 
-        private void Pp_FileDataReceived(object sender, FileReceivedStatus e)
+        private void FileDataReceived(object sender, IncomingFileTransferStatus e)
         {
-            Debug.WriteLine("Percentage progress: " + e.Progress + " file : " + e.SourceFile);
+            IncomingFileTransferStatus record = _myIncommingTransfers.SingleOrDefault(a => a.TransferID == e.TransferID);
+            if (record != default(IncomingFileTransferStatus))
+            {
+                // Update
+                record.Complete = e.Complete;
+                record.DateTimeStarted = e.DateTimeStarted;
+                record.Exception = e.Exception;
+                record.FileName = e.FileName;
+                record.FileSizeBytes = e.FileSizeBytes;
+                record.SourceIP = e.SourceIP;
+                record.SpeedBytesPerSecond = e.SpeedBytesPerSecond;
+                record.Successful = e.Successful;
+                record.TransferID = e.TransferID;
+                record.TransferredSizeBytes = e.TransferredSizeBytes;
+            }
+            else
+            {
+                _myIncommingTransfers.Add(e);
+            }
         }
 
         public bool StartService()

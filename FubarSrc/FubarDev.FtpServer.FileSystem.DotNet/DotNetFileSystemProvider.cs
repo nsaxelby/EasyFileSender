@@ -8,7 +8,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-
+using EFS.Shared.EventModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -48,11 +48,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             _flushAfterWrite = options.Value.FlushAfterWrite;
         }
 
-        public event EventHandler<FileReceivedStatus> FileDataReceived;
+        public event EventHandler<IncomingFileTransferStatus> FileDataReceived;
 
-        protected virtual void OnFileDataReceived(FileReceivedStatus e)
+        protected virtual void OnFileDataReceived(IncomingFileTransferStatus e)
         {
-            EventHandler<FileReceivedStatus> handler = FileDataReceived;
+            EventHandler<IncomingFileTransferStatus> handler = FileDataReceived;
             handler?.Invoke(this, e);
         }
 
@@ -72,7 +72,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             return Task.FromResult<IUnixFileSystem>(dotNetFS);
         }
 
-        private void DotNetFS_FileDataReceived(object sender, FileReceivedStatus e)
+        private void DotNetFS_FileDataReceived(object sender, IncomingFileTransferStatus e)
         {
             OnFileDataReceived(e);
         }

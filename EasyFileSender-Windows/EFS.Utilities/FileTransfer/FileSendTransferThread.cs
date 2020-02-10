@@ -1,34 +1,30 @@
-﻿using EFS.Global.Exceptions;
-using EFS.Global.Models;
-using FluentFTP;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Threading;
+using EFS.Global.Exceptions;
+using EFS.Shared.EventModels;
+using FluentFTP;
 
 namespace EFS.Utilities.FileTransfer
 {
     public class FileSendTransferThread
     {
-        private readonly OnFileTransferStatusChanged _statusUpdateDelegateMethod;
         private readonly string _destinationIP;
         private readonly string _sourceFile;
-        public FileTransferStatus TransferStatus { get; set; }
+        public SendFileTransferStatus TransferStatus { get; set; }
 
         private Thread _transferThread;
 
-        public delegate void OnFileTransferStatusChanged(FileTransferStatus fileTransferStatus);
-
-        public FileSendTransferThread(Guid transferID, string destinationIP, string sourceFile, long fileSizeBytes, OnFileTransferStatusChanged onFileTransferStatusChangedDelegate)
+        public FileSendTransferThread(Guid transferID, string destinationIP, string sourceFile, long fileSizeBytes)
         {
             _destinationIP = destinationIP;
             _sourceFile = sourceFile;
-            _statusUpdateDelegateMethod = onFileTransferStatusChangedDelegate;
-            TransferStatus = new FileTransferStatus()
+            TransferStatus = new SendFileTransferStatus()
             {
                 TransferID = transferID,
                 DestinationIP = destinationIP,
-                SourceFile = sourceFile,
+                FileName = sourceFile,
                 Complete = false,
                 FileSizeBytes = fileSizeBytes,
                 TransferredSizeBytes = 0,
@@ -50,7 +46,6 @@ namespace EFS.Utilities.FileTransfer
             // Only reports pecentage, so up to us to work out file transfer bytes
             TransferStatus.TransferredSizeBytes = Convert.ToInt64((TransferStatus.FileSizeBytes / 100) * progress.Progress);
             TransferStatus.SpeedBytesPerSecond = progress.TransferSpeed;
-            _statusUpdateDelegateMethod(TransferStatus);
         }
 
         private void DoTransfer()
