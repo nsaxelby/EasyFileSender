@@ -46,7 +46,6 @@
     <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
     <Compile Include="Exceptions\MalformedUDPBroadcastException.cs" />
     <Compile Include="Models\ClientInfo.cs" />
-    <Compile Include="Models\FileTransferStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

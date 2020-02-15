@@ -1,5 +1,6 @@
 ﻿using EFS.Global.Enums;
 using EFS.Global.Models;
+using EFS.Shared.EventModels;
 using EFS.Utilities;
 using EFS.Utilities.Discovery;
 using EFS.Utilities.FileTransfer;
@@ -7,7 +8,6 @@ using EFS.WindowsFormApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -22,19 +22,24 @@ namespace EFS.WindowsFormApp
         private SendFileService _sendFileService;
         private int _port = 3008;
         private BindingList<ClientInfoViewModelListItem> _clientList = new BindingList<ClientInfoViewModelListItem>();
-        private BindingList<FileTransferStatus> _selectedClientTransferList = new BindingList<FileTransferStatus>();
+        private BindingList<FileTransferStatus> _selectedClientSendTransferList = new BindingList<FileTransferStatus>();
         private string _downloadsDirectory;
 
         public EFSForm()
         {
+            _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
+            _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
             InitializeComponent();
         }
 
         private void EFSForm_Load(object sender, EventArgs e)
         {
             clientListBox.DataSource = _clientList;
-            transfersListBox.DataSource = _selectedClientTransferList;
-            _selectedClientTransferList.ListChanged += _selectedClientTransferList_ListChanged;
+            transfersListBox.DataSource = _selectedClientSendTransferList;
+
+            // Change to either list can be handled by the same event handler
+            _selectedClientSendTransferList.ListChanged += _selectedClientTransferList_ListChanged;
+            _ftpServerService._myIncommingTransfers.ListChanged += _selectedClientTransferList_ListChanged;
 
             // Pops up a box to select adapter/network/IP to broadcast to others
             ConfigureMyIPAddress();
@@ -55,9 +60,7 @@ namespace EFS.WindowsFormApp
                 _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
                 _discoveryService.StartDiscoveryService();
             }
-
-            _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
-            _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
+            
             _ftpServerService.StartService();
 
             _sendFileService = new SendFileService();
@@ -65,7 +68,14 @@ namespace EFS.WindowsFormApp
 
         private void _selectedClientTransferList_ListChanged(object sender, ListChangedEventArgs e)
         {
-            // TODO, is there a better way to do this?
+            Invoke(new MethodInvoker(() =>
+            {
+                if (e.ListChangedType == ListChangedType.ItemAdded && ((ClientInfoViewModelListItem)clientListBox.SelectedItem).IsSelfClient)
+                {
+                    // Only need to call this when it's an Add, works fine when it's an update. Adding doesn't refresh for some reason.
+                    ((CurrencyManager)clientListBox.BindingContext[_ftpServerService._myIncommingTransfers]).Refresh();
+                }
+            }));
             transfersListBox.Invalidate();
         }
 
@@ -130,14 +140,14 @@ namespace EFS.WindowsFormApp
             }));           
         }
 
-        public void DrawSelectedClient()
+        public void DrawSelectedClientTransfers()
         {
             if(clientListBox.SelectedItem != null)
             {
                 ClientInfoViewModelListItem clientObjectSelected = (ClientInfoViewModelListItem)clientListBox.SelectedItem;
                 if(clientObjectSelected.IsSelfClient)
                 {
-                    _selectedClientTransferList.Clear();
+                    transfersListBox.DataSource = _ftpServerService._myIncommingTransfers;
                     selectedIpLabel.Text = "You: " + clientObjectSelected.IpAddress + " - Receiving Files";
                     sendFileButton.Visible = false;
                     dragAndDropPanel.Visible = false;
@@ -145,6 +155,7 @@ namespace EFS.WindowsFormApp
                 }
                 else
                 {
+                    transfersListBox.DataSource = _selectedClientSendTransferList;
                     selectedIpLabel.Text = clientObjectSelected.IpAddress;
                     AddSelectedClientTransfersToBindingList(clientObjectSelected.IpAddress);
                     sendFileButton.Visible = true;
@@ -154,22 +165,22 @@ namespace EFS.WindowsFormApp
             }
             else
             {
-                _selectedClientTransferList.Clear();
+                _selectedClientSendTransferList.Clear();
             }
         }
 
         private void AddSelectedClientTransfersToBindingList(string destinationIP)
         {
-            _selectedClientTransferList.Clear();
+            _selectedClientSendTransferList.Clear();
             foreach (FileTransferStatus clientTransfers in _sendFileService.GetTransfersByDestIP(destinationIP))
             {
-                _selectedClientTransferList.Add(clientTransfers);
+                _selectedClientSendTransferList.Add(clientTransfers);
             }
         }
 
         private void ClientListBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            DrawSelectedClient();
+            DrawSelectedClientTransfers();
         }
 
         private void SendFileButton_Click(object sender, EventArgs e)
@@ -188,11 +199,6 @@ namespace EFS.WindowsFormApp
                     }
                 }
             }
-        }
-
-        private void OnFileTransferStatusChanged(FileTransferStatus fileTransferStatus)
-        {
-            Debug.WriteLine("Transfer guid: " + fileTransferStatus.TransferID.ToString() + " + file : " + fileTransferStatus.SourceFile + " percentage: " + fileTransferStatus.Progress.ToString("00.00"));
         }
 
         private void DragAndDropPanel_DragDrop(object sender, DragEventArgs e)
@@ -216,9 +222,8 @@ namespace EFS.WindowsFormApp
 
         private void CommonTransfer(string fileName)
         {
-            long fileSizeBytes = 0;
-            fileSizeBytes = new FileInfo(fileName).Length;
-            _selectedClientTransferList.Add(_sendFileService.StartNewTransferThread(selectedIpLabel.Text, fileName, fileSizeBytes, OnFileTransferStatusChanged));
+            long fileSizeBytes = new FileInfo(fileName).Length;
+            _selectedClientSendTransferList.Add(_sendFileService.StartNewTransferThread(selectedIpLabel.Text, fileName, fileSizeBytes));
         }
 
         private void DragAndDropPanel_DragEnter(object sender, DragEventArgs e)

@@ -103,9 +103,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj">
+      <Project>{C87C4C52-31FC-4D6F-BE39-C3B95189D308}</Project>
+      <Name>FubarDev.FtpServer.FileSystem.DotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer\FubarDev.FtpServer.csproj">
+      <Project>{AC61109B-DCC3-46F4-A982-E6E16BCFD667}</Project>
+      <Name>FubarDev.FtpServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EFS.Global\EFS.Global.csproj">
       <Project>{1999BB80-7F07-4D58-AEE4-227DEC2738F0}</Project>
       <Name>EFS.Global</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EFS.Shared\EFS.Shared.csproj">
+      <Project>{C160B7A6-98D5-43C0-BB92-B51B5A93609F}</Project>
+      <Name>EFS.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\EFS.Utilities\EFS.Utilities.csproj">
       <Project>{C367F0BD-FE9D-40AB-ADF3-241948471196}</Project>

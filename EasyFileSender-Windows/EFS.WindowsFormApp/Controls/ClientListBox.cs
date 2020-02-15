@@ -58,8 +58,15 @@ namespace EFS.WindowsFormApp
                     DrawItemState drawItemState = e.State;
                     if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
                     {
-                        // BackColor is not a settable property, so we need to new a DrawItemEventArgs
-                        backgroundColorObj = StaticColors.yellowColor;
+                        if (ciObj.IsSelfClient)
+                        {
+                            backgroundColorObj = StaticColors.lighterBlueColor;
+                        }
+                        else
+                        {
+                            // BackColor is not a settable property, so we need to new a DrawItemEventArgs
+                            backgroundColorObj = StaticColors.yellowColor;
+                        }
                         drawItemState = drawItemState ^ DrawItemState.Selected;
                     }
                     else if (ciObj.IsSelfClient)
