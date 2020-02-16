@@ -57,7 +57,7 @@ namespace EFS.WindowsFormApp
 
             if (string.IsNullOrEmpty(_myIpAddress) == false)
             {
-                _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
+                _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 5000);
                 _discoveryService.StartDiscoveryService();
             }
             
