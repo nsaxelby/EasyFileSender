@@ -9,7 +9,7 @@ namespace EFS.Utilities.Discovery
         private DiscoveryAdvertiser _discoveryAdvertiser;
         private DiscoveryListener _discoveryListener;
 
-        public DiscoveryService(string myIpAddress, int port, OnRecievedClientData delMethod, int delayMs = 5000)
+        public DiscoveryService(string myIpAddress, int port, OnRecievedClientData delMethod, OnClientExpired delMethodClientExpired, int delayMs = 5000)
         {
             ClientInfo ci = new ClientInfo()
             {
@@ -20,7 +20,7 @@ namespace EFS.Utilities.Discovery
 
             string broadcastAddress = DiscoveryUtils.GetBroadcastAddress(myIpAddress);
             _discoveryAdvertiser = new DiscoveryAdvertiser(broadcastAddress, port, ci, delayMs);
-            _discoveryListener = new DiscoveryListener(myIpAddress, port, delMethod);
+            _discoveryListener = new DiscoveryListener(myIpAddress, port, delMethod, delMethodClientExpired);
         }
 
         public bool StartDiscoveryService()

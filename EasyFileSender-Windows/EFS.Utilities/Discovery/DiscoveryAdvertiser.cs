@@ -53,13 +53,17 @@ namespace EFS.Utilities.Discovery
 
         public void DoBroadcastEvent()
         {
+            // Upon first fire, before starting, do a broadcast so we get an immediate poll on startup
+            byte[] send_buffer = Encoding.ASCII.GetBytes(_sendText);
+            _socket.SendTo(send_buffer, _sendEndpoint);
+
             _pollStopwatch.Start();
             // While loop is on 200 ms poll, but only send broadcast on bigger tick
             while (_runThread)
             {
                 if (_pollStopwatch.ElapsedMilliseconds >= _delayMs)
                 {
-                    byte[] send_buffer = Encoding.ASCII.GetBytes(_sendText);
+                    send_buffer = Encoding.ASCII.GetBytes(_sendText);
                     _socket.SendTo(send_buffer, _sendEndpoint);
                     _pollStopwatch.Reset();
                     _pollStopwatch.Start();

@@ -57,7 +57,7 @@ namespace EFS.WindowsFormApp
 
             if (string.IsNullOrEmpty(_myIpAddress) == false)
             {
-                _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, 500);
+                _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, OnClientExpired, 5000);
                 _discoveryService.StartDiscoveryService();
             }
             
@@ -138,6 +138,17 @@ namespace EFS.WindowsFormApp
                     _clientList.Add(new ClientInfoViewModelListItem(clientInfo, string.Equals(_myIpAddress, clientInfo.IpAddress)));
                 }
             }));           
+        }
+
+        private void OnClientExpired(string ipAddressToRemove)
+        {
+            Invoke(new MethodInvoker(() =>
+            {
+                if (_clientList.Any(a => a.IpAddress == ipAddressToRemove))
+                {
+                    _clientList.Remove(_clientList.Single(a => a.IpAddress == ipAddressToRemove));
+                }
+            }));
         }
 
         public void DrawSelectedClientTransfers()
