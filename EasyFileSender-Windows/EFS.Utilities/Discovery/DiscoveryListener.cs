@@ -1,10 +1,13 @@
 ﻿using EFS.Global.Exceptions;
 using EFS.Global.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace EFS.Utilities.Discovery
 {
@@ -19,15 +22,25 @@ namespace EFS.Utilities.Discovery
         private readonly AsyncCallback _asyncCallback = null;
         private readonly string _myIpAddress;
         private readonly OnRecievedClientData _delegateMethod;
+        private readonly OnClientExpired _clientExpiredDelMethod;
+
+        private List<IpTimerRecord> _clientIpRecords = new List<IpTimerRecord>();
+
+        private readonly Thread _removeExpiredClientsThread;
+        private bool _runThread = true;
+        private readonly int _removeExpiredClientsPollDelay = 30000;
+        private readonly int _removeExpiredClientsSecondsWithoutPollExpire = 30;
+        private readonly Stopwatch _removeExpiredClientsPollStopwatch = new Stopwatch();
 
         public delegate void OnRecievedClientData(ClientInfo clientInfo);
+        public delegate void OnClientExpired(string ipToRemove);
 
         public class State
         {
             public byte[] buffer = new byte[_bufSize];
         }
 
-        public DiscoveryListener(string myIpAddress, int port, OnRecievedClientData onRecievedClientData)
+        public DiscoveryListener(string myIpAddress, int port, OnRecievedClientData onRecievedClientData, OnClientExpired onClientExpiredDel)
         {
             _myIpAddress = myIpAddress;
 
@@ -38,10 +51,14 @@ namespace EFS.Utilities.Discovery
 
             _asyncCallback = ProcessRecievedPacket;
             _delegateMethod = onRecievedClientData;
+            _clientExpiredDelMethod = onClientExpiredDel;
+
+            _removeExpiredClientsThread = new Thread(new ThreadStart(this.ClearExpiredIPs));
         }
 
         public void StartListener()
         {
+            _removeExpiredClientsThread.Start();
             _socket.BeginReceiveFrom(_state.buffer, 0, _bufSize, SocketFlags.None, ref _listenEndPoint, _asyncCallback, _state);
         }
 
@@ -49,7 +66,12 @@ namespace EFS.Utilities.Discovery
         {
             try
             {
+                _runThread = false;
                 _socket.Close();
+                if (_removeExpiredClientsThread.ThreadState == System.Threading.ThreadState.Running)
+                {
+                    _removeExpiredClientsThread.Join();
+                }
             }
             catch
             {
@@ -70,6 +92,14 @@ namespace EFS.Utilities.Discovery
                     ClientInfo ci = DiscoveryUtils.GetClientInfoFromString(recievedStr);
                     if (string.Equals(ci.IpAddress, _myIpAddress) == false)
                     {
+                        if(_clientIpRecords.Any(a => a.IpAddress == ci.IpAddress) == false)
+                        {
+                            _clientIpRecords.Add(new IpTimerRecord() { IpAddress = ci.IpAddress, LastPollReceived = DateTime.Now });
+                        }
+                        else
+                        {
+                            _clientIpRecords.Single(a => a.IpAddress == ci.IpAddress).LastPollReceived = DateTime.Now;
+                        }
                         _delegateMethod(ci);
                     }
                 }
@@ -82,6 +112,35 @@ namespace EFS.Utilities.Discovery
             {
                 // This is expected on close
             }
+        }
+        
+        public void ClearExpiredIPs()
+        {
+            _removeExpiredClientsPollStopwatch.Start();
+            // While loop is on 200 ms poll, but only Process the remove on a longer tick
+            while (_runThread)
+            {
+                if (_removeExpiredClientsPollStopwatch.ElapsedMilliseconds >= _removeExpiredClientsPollDelay)
+                {
+                    foreach(var currentClient in _clientIpRecords.ToList())
+                    {
+                        if(currentClient.LastPollReceived.AddSeconds(_removeExpiredClientsSecondsWithoutPollExpire) < DateTime.Now)
+                        {
+                            _clientIpRecords.Remove(_clientIpRecords.Single(a => a.IpAddress == currentClient.IpAddress));
+                            _clientExpiredDelMethod(currentClient.IpAddress);
+                        }
+                    }
+                    _removeExpiredClientsPollStopwatch.Reset();
+                    _removeExpiredClientsPollStopwatch.Start();
+                }
+                Thread.Sleep(200);
+            }
+        }
+
+        class IpTimerRecord
+        {
+            public string IpAddress { get; set; }
+            public DateTime LastPollReceived { get; set; }
         }
     }
 }
