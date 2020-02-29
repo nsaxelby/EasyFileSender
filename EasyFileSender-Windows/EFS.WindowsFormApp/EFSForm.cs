@@ -27,8 +27,7 @@ namespace EFS.WindowsFormApp
 
         public EFSForm()
         {
-            _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
-            _ftpServerService = new FTPServerService(_downloadsDirectory, 21);
+
             InitializeComponent();
         }
 
@@ -38,13 +37,24 @@ namespace EFS.WindowsFormApp
             transfersListBox.DataSource = _selectedClientSendTransferList;
 
             // Change to either list can be handled by the same event handler
-            _selectedClientSendTransferList.ListChanged += _selectedClientTransferList_ListChanged;
-            _ftpServerService._myIncommingTransfers.ListChanged += _selectedClientTransferList_ListChanged;
+            _selectedClientSendTransferList.ListChanged += _selectedClientTransferList_ListChanged;            
 
             // Pops up a box to select adapter/network/IP to broadcast to others
             ConfigureMyIPAddress();
 
             LoadIpAddressLabel();
+            ClientInfo myClientInfo = new ClientInfo()
+            {
+                ClientType = ClientTypeEnum.windows.ToString(),
+                IpAddress = _myIpAddress,
+                Version = VersionNumberEnum.v1.ToString()
+            };
+
+            _downloadsDirectory = EnvironmentTools.GetDownloadsFolder();
+            _ftpServerService = new FTPServerService(_downloadsDirectory, 21, myClientInfo);
+            _ftpServerService._myIncommingTransfers.ListChanged += _selectedClientTransferList_ListChanged;
+
+            _ftpServerService.StartService();
 
             // Add my client to top of list
             _clientList.Add(new ClientInfoViewModelListItem()
@@ -52,16 +62,15 @@ namespace EFS.WindowsFormApp
                 ClientType = ClientTypeEnum.windows.ToString(),
                 IpAddress = _myIpAddress,
                 IsSelfClient = true,
-                Version = VersionNumberEnum.v1.ToString()
-            });
+                Version = VersionNumberEnum.v1.ToString(),
+                AddedManually = true
+            });            
 
             if (string.IsNullOrEmpty(_myIpAddress) == false)
             {
-                _discoveryService = new DiscoveryService(_myIpAddress, _port, OnRecievedClientData, OnClientExpired, 5000);
+                _discoveryService = new DiscoveryService(_port, OnRecievedClientData, OnClientExpired, myClientInfo, 5000);
                 _discoveryService.StartDiscoveryService();
-            }
-            
-            _ftpServerService.StartService();
+            }            
 
             _sendFileService = new SendFileService();
         }
@@ -135,7 +144,7 @@ namespace EFS.WindowsFormApp
             {
                 if (!_clientList.Any(a => a.IpAddress == clientInfo.IpAddress))
                 {
-                    _clientList.Add(new ClientInfoViewModelListItem(clientInfo, string.Equals(_myIpAddress, clientInfo.IpAddress)));
+                    _clientList.Add(new ClientInfoViewModelListItem(clientInfo, string.Equals(_myIpAddress, clientInfo.IpAddress), false));
                 }
             }));           
         }
@@ -242,6 +251,31 @@ namespace EFS.WindowsFormApp
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             { 
                 e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void addClientButton_Click(object sender, EventArgs e)
+        {
+            using (AddClientManuallyDialog addClientDialog = new AddClientManuallyDialog())
+            {
+                if (addClientDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (addClientDialog._clientInfo.IpAddress.Equals(_myIpAddress))
+                    {
+                        MessageBox.Show("Cannot add yourself as a client","Self Client", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        if (_clientList.Any(a => a.IpAddress == addClientDialog._clientInfo.IpAddress))
+                        {
+                            MessageBox.Show("Client already added to list", "Duplicate", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            _clientList.Add(new ClientInfoViewModelListItem(addClientDialog._clientInfo, false, true));
+                        }
+                    }
+                }
             }
         }
     }

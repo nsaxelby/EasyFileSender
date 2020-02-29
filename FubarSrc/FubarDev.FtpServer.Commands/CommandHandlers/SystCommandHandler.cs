@@ -23,6 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class SystCommandHandler : FtpCommandHandler
     {
         private readonly string _operatingSystem;
+        private readonly string _easyFileSenderClientString;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SystCommandHandler"/> class.
@@ -31,6 +32,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public SystCommandHandler(IOptions<SystCommandOptions> options)
         {
             _operatingSystem = options.Value.OperatingSystem ?? "UNIX";
+            _easyFileSenderClientString = options.Value.EasyFileSenderVersion;
         }
 
         /// <inheritdoc />
@@ -41,7 +43,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
-            return Task.FromResult<IFtpResponse?>(new FtpResponse(215, T("{0} Type: {1}", _operatingSystem, transferMode)));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(215, T("{0} Type: {1} efsversion:{2}", _operatingSystem, transferMode, _easyFileSenderClientString)));
         }
     }
 }

@@ -41,6 +41,7 @@
             this.sendFileButton = new System.Windows.Forms.Button();
             this.dragAndDropPanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
+            this.addClientButton = new System.Windows.Forms.Button();
             this.transfersListBox = new EFS.WindowsFormApp.Controls.TransfersListBox();
             this.clientListBox = new EFS.WindowsFormApp.ClientListBox();
             this.panel1.SuspendLayout();
@@ -58,7 +59,7 @@
             this.panel1.Controls.Add(this.clientListBox);
             this.panel1.Location = new System.Drawing.Point(12, 38);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(225, 400);
+            this.panel1.Size = new System.Drawing.Size(225, 371);
             this.panel1.TabIndex = 0;
             // 
             // label1
@@ -189,6 +190,16 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "Drag and Drop file here to send";
             // 
+            // addClientButton
+            // 
+            this.addClientButton.Location = new System.Drawing.Point(12, 415);
+            this.addClientButton.Name = "addClientButton";
+            this.addClientButton.Size = new System.Drawing.Size(75, 23);
+            this.addClientButton.TabIndex = 7;
+            this.addClientButton.Text = "Add Client";
+            this.addClientButton.UseVisualStyleBackColor = true;
+            this.addClientButton.Click += new System.EventHandler(this.addClientButton_Click);
+            // 
             // transfersListBox
             // 
             this.transfersListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -227,7 +238,7 @@
             "5"});
             this.clientListBox.Location = new System.Drawing.Point(-1, 22);
             this.clientListBox.Name = "clientListBox";
-            this.clientListBox.Size = new System.Drawing.Size(225, 382);
+            this.clientListBox.Size = new System.Drawing.Size(225, 346);
             this.clientListBox.TabIndex = 0;
             this.clientListBox.SelectedValueChanged += new System.EventHandler(this.ClientListBox_SelectedValueChanged);
             // 
@@ -238,6 +249,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.addClientButton);
             this.Controls.Add(this.dragAndDropPanel);
             this.Controls.Add(this.sendFileButton);
             this.Controls.Add(this.panel4);
@@ -281,6 +293,7 @@
         private System.Windows.Forms.Panel dragAndDropPanel;
         private System.Windows.Forms.Label label5;
         private Controls.TransfersListBox transfersListBox;
+        private System.Windows.Forms.Button addClientButton;
     }
 }
 

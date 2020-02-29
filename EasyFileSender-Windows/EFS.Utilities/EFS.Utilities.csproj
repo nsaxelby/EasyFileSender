@@ -131,6 +131,10 @@
       <Project>{51EF082F-6F6E-4A7F-9939-8A6F272A5457}</Project>
       <Name>FubarDev.FtpServer.Abstractions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj">
+      <Project>{498B839E-2EE6-4C9D-B115-F3A37513687C}</Project>
+      <Name>FubarDev.FtpServer.Commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj">
       <Project>{C87C4C52-31FC-4D6F-BE39-C3B95189D308}</Project>
       <Name>FubarDev.FtpServer.FileSystem.DotNet</Name>
