@@ -1,11 +1,13 @@
 ﻿using EFS.Global.Exceptions;
 using EFS.Global.Models;
+using FluentFTP;
+using System;
 using System.Linq;
 using System.Net;
 
 namespace EFS.Utilities.Discovery
 {
-    public static class DiscoveryUtils
+    public static partial class DiscoveryUtils
     { 
         /// <summary>
         /// Replaces the last byte ( host part ) of the input IP with 255
@@ -45,6 +47,33 @@ namespace EFS.Utilities.Discovery
             toReturn.ClientType = splitStr[2];
             toReturn.Version = splitStr[3];
 
+            return toReturn;
+        }
+
+        public static CheckFtpClientResult CheckFTPCLientExists(string ipv4Address)
+        {
+            CheckFtpClientResult toReturn = new CheckFtpClientResult();
+            try
+            {
+                var throwAway = IPAddress.Parse(ipv4Address);
+                FtpClient client = new FtpClient(ipv4Address);
+                client.ConnectTimeout = 3000;
+                client.Credentials = new NetworkCredential("anonymous", "anon@anon.com");
+                client.Connect();
+                int indexOfEFSVersionString = client.SystemType.IndexOf("efsversion:");
+                if(indexOfEFSVersionString < 0)
+                {
+                    throw new Exception("FTP Server found, but not EasyFileSender enabled.");
+                }
+                string efsVersionString = client.SystemType.Substring(indexOfEFSVersionString + "efsversion:".Length);
+                toReturn.ClientInfo = GetClientInfoFromString(efsVersionString);
+                toReturn.ClientFound = true;
+            }
+            catch (Exception ex)
+            {
+                toReturn.ClientFound = false;
+                toReturn.FailureMessage = ex.Message;
+            }
             return toReturn;
         }
     }

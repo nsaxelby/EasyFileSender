@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddClientManuallyDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddClientManuallyDialog.Designer.cs">
+      <DependentUpon>AddClientManuallyDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ClientListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -74,6 +80,9 @@
       <DependentUpon>SelectNetworkAdapterDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ClientInfoViewModelListItem.cs" />
+    <EmbeddedResource Include="AddClientManuallyDialog.resx">
+      <DependentUpon>AddClientManuallyDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EFSForm.resx">
       <DependentUpon>EFSForm.cs</DependentUpon>
     </EmbeddedResource>

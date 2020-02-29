@@ -45,6 +45,7 @@
     <Compile Include="Enums\VersionNumberEnum.cs" />
     <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
     <Compile Include="Exceptions\MalformedUDPBroadcastException.cs" />
+    <Compile Include="Models\CheckFtpClientResult.cs" />
     <Compile Include="Models\ClientInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

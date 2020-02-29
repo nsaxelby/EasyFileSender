@@ -13,5 +13,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets the operating system returned by the SYST command.
         /// </summary>
         public string OperatingSystem { get; set; } = "UNIX";
+
+        public string EasyFileSenderVersion { get; set; }
     }
 }

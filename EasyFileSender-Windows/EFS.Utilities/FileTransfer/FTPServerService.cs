@@ -1,10 +1,13 @@
 ﻿using EFS.Shared.EventModels;
-using FubarDev.FtpServer;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
+using FubarDev.FtpServer.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Linq;
+using FubarDev.FtpServer;
+using EFS.Global.Models;
+using EFS.Utilities.Discovery;
 
 namespace EFS.Utilities.FileTransfer
 {
@@ -14,7 +17,7 @@ namespace EFS.Utilities.FileTransfer
         private readonly IFtpServerHost _ftpHost;
         public BindingList<IncomingFileTransferStatus> _myIncommingTransfers = new BindingList<IncomingFileTransferStatus>();
         
-        public FTPServerService(string localDirectory, int port)
+        public FTPServerService(string localDirectory, int port, ClientInfo clientInfo)
         {
             _myIncommingTransfers = new BindingList<IncomingFileTransferStatus>();
             _myIncommingTransfers.AllowNew = true;
@@ -39,6 +42,12 @@ namespace EFS.Utilities.FileTransfer
             services.Configure<FtpServerOptions>(opt =>
             {
                 opt.Port = _port;
+            });
+
+            // Feature #7 This allows the FTP to respons via SYST, and tacks onto the end "efsversion:" and has a ClientInfo string after that
+            services.Configure<SystCommandOptions>(opt =>
+            {
+                opt.EasyFileSenderVersion = DiscoveryUtils.GetDiscoveryPacketStr(clientInfo);
             });
 
             // Build the service provider

@@ -9,18 +9,11 @@ namespace EFS.Utilities.Discovery
         private DiscoveryAdvertiser _discoveryAdvertiser;
         private DiscoveryListener _discoveryListener;
 
-        public DiscoveryService(string myIpAddress, int port, OnRecievedClientData delMethod, OnClientExpired delMethodClientExpired, int delayMs = 5000)
+        public DiscoveryService(int port, OnRecievedClientData delMethod, OnClientExpired delMethodClientExpired, ClientInfo clientInfo, int delayMs = 5000)
         {
-            ClientInfo ci = new ClientInfo()
-            {
-                ClientType = ClientTypeEnum.windows.ToString(),
-                IpAddress = myIpAddress,
-                Version = VersionNumberEnum.v1.ToString()
-            };
-
-            string broadcastAddress = DiscoveryUtils.GetBroadcastAddress(myIpAddress);
-            _discoveryAdvertiser = new DiscoveryAdvertiser(broadcastAddress, port, ci, delayMs);
-            _discoveryListener = new DiscoveryListener(myIpAddress, port, delMethod, delMethodClientExpired);
+            string broadcastAddress = DiscoveryUtils.GetBroadcastAddress(clientInfo.IpAddress);
+            _discoveryAdvertiser = new DiscoveryAdvertiser(broadcastAddress, port, clientInfo, delayMs);
+            _discoveryListener = new DiscoveryListener(clientInfo.IpAddress, port, delMethod, delMethodClientExpired);
         }
 
         public bool StartDiscoveryService()
