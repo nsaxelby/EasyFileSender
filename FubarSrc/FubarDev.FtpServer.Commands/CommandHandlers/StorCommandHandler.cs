@@ -130,7 +130,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         expectedFileSize,
                         dataConnection.RemoteAddress.Address.ToString())
                    .ConfigureAwait(false);
-                Console.WriteLine("Crate new ended");
+                Console.WriteLine("Create new ended");
 
             }
             else
