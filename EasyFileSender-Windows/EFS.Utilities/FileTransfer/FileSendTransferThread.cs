@@ -16,6 +16,8 @@ namespace EFS.Utilities.FileTransfer
 
         private Thread _transferThread;
 
+        private CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
+
         public FileSendTransferThread(Guid transferID, string destinationIP, string sourceFile, long fileSizeBytes)
         {
             _destinationIP = destinationIP;
@@ -41,13 +43,6 @@ namespace EFS.Utilities.FileTransfer
             return true;
         }
 
-        private void FtpProgressAction(FtpProgress progress)
-        {
-            // Only reports pecentage, so up to us to work out file transfer bytes
-            TransferStatus.TransferredSizeBytes = Convert.ToInt64((TransferStatus.FileSizeBytes / 100) * progress.Progress);
-            TransferStatus.SpeedBytesPerSecond = progress.TransferSpeed;
-        }
-
         private void DoTransfer()
         {
             try
@@ -61,10 +56,16 @@ namespace EFS.Utilities.FileTransfer
                     throw new FileAlreadyExistsException("File : " + Path.GetFileName(_sourceFile) + " already exists on destination.");
                 }
 
+                var progressDel = new Progress<FtpProgress>(progress =>
+                {
+                    TransferStatus.TransferredSizeBytes = Convert.ToInt64((TransferStatus.FileSizeBytes / 100) * progress.Progress);
+                    TransferStatus.SpeedBytesPerSecond = progress.TransferSpeed;
+                });
+
                 TransferStatus.DateTimeStarted = DateTime.Now;
                 using(FileStream sourceStream = File.OpenRead(_sourceFile))
                 {
-                    client.Upload(sourceStream, Path.GetFileName(_sourceFile), FtpRemoteExists.Skip, false, FtpProgressAction);
+                    var x = client.UploadAsync(sourceStream, Path.GetFileName(_sourceFile), FtpRemoteExists.Skip, false, progressDel, _cancelTokenSource.Token).Result;
                     TransferStatus.TransferredSizeBytes = TransferStatus.FileSizeBytes;
                     // Update the overall throughput of the transfer based on time
                     TransferStatus.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(TransferStatus.DateTimeStarted, TransferStatus.FileSizeBytes);
@@ -78,17 +79,26 @@ namespace EFS.Utilities.FileTransfer
             }
             catch (Exception ex)
             {
-                TransferStatus.Complete = true;
-                TransferStatus.Successful = false;
-                TransferStatus.Exception = ex;
+                if (_cancelTokenSource.IsCancellationRequested)
+                {
+                    TransferStatus.Complete = true;
+                    TransferStatus.Successful = false;
+                    TransferStatus.Cancelled = true;
+                }
+                else
+                {
+                    TransferStatus.Complete = true;
+                    TransferStatus.Successful = false;
+                    TransferStatus.Exception = ex;
+                }
             }
         }
 
         public bool StopTransfer()
         {
-            if (_transferThread.IsAlive)
+            if(TransferStatus.Complete == false)
             {
-                _transferThread.Join();
+                _cancelTokenSource.Cancel();
             }
             return true;
         }

@@ -43,8 +43,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFS.Shared", "EFS.Shared\EF
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\third-party\DotNet.Glob\DotNet.Glob.projitems*{498b839e-2ee6-4c9d-b115-f3a37513687c}*SharedItemsImports = 5
+		..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{51ef082f-6f6e-4a7f-9939-8a6f272a5457}*SharedItemsImports = 5
 		..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{52126b62-de83-4597-a832-d144f9a5a870}*SharedItemsImports = 13
 		..\third-party\DotNet.Glob\DotNet.Glob.projitems*{a45290b4-20f7-48e9-8543-c69240bfb9f8}*SharedItemsImports = 13
+		..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{ac61109b-dcc3-46f4-a982-e6e16bcfd667}*SharedItemsImports = 5
+		..\third-party\GnuSslStream\GnuSslStream.projitems*{ac61109b-dcc3-46f4-a982-e6e16bcfd667}*SharedItemsImports = 5
+		..\FubarSrc\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{c87c4c52-31fc-4d6f-be39-c3b95189d308}*SharedItemsImports = 5
 		..\third-party\ReadLine\ReadLine.projitems*{f68f448f-e8a4-4536-9a83-12018b6294b0}*SharedItemsImports = 13
 		..\third-party\GnuSslStream\GnuSslStream.projitems*{fd524518-e097-4ac0-aac8-d5ea24f31545}*SharedItemsImports = 13
 	EndGlobalSection

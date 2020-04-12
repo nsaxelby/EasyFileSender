@@ -222,13 +222,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             {
                 var targetEntry = (DotNetDirectoryEntry)targetDirectory;
                 var fileInfo = new FileInfo(Path.Combine(targetEntry.Info.FullName, fileName));
-                Console.WriteLine("Transaferring file start : " + fileName);
+                Console.WriteLine("Transferring file start : " + fileName);
+                int totalBytesRead = 0;
+
                 using (var output = fileInfo.Create())
                 {
                     byte[] buffer = new byte[_streamBufferSize];
                     DateTime datetimeLastSent = default;
 
-                    int totalBytesRead = 0;
                     int read;
                     while ((read = data.Read(buffer, 0, buffer.Length)) > 0)
                     {
@@ -244,14 +245,27 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                             OnFileDataReceived(frs);
                         }
                     }
+                }
+                frs.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(frs.DateTimeStarted, totalBytesRead);
+                frs.TransferredSizeBytes = totalBytesRead;
+                if (totalBytesRead != expectedFileSize)
+                {
+                    // We count this as cancelled, as opposed to exceptioned. Realstically we don't know if it was either.
+                    frs.Complete = true;
+                    frs.Successful = false;
+                    frs.Cancelled = true;
 
-                    // The final send to complete the transfer
-                    frs.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(frs.DateTimeStarted, totalBytesRead);
-                    frs.TransferredSizeBytes = totalBytesRead;
+                    // Delete cancelled/incomplete file on cancel or incomplete file
+                    fileInfo.Delete();
+                }
+                else
+                {
                     frs.Complete = true;
                     frs.Successful = true;
-                    OnFileDataReceived(frs);
                 }
+
+                // The final send to complete the transfer
+                OnFileDataReceived(frs);
                 return null;
             }
             catch (Exception exx)

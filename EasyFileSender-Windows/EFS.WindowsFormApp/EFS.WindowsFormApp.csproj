@@ -134,8 +134,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Images\x-mark-xxl.png" />
     <EmbeddedResource Include="Images\apple-32.png" />
-    <Content Include="Images\IconAttribution.txt" />
+    <EmbeddedResource Include="Images\IconAttribution.txt" />
     <EmbeddedResource Include="Images\windows-32-ico.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

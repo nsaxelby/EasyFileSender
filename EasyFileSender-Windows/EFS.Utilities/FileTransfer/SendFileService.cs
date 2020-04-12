@@ -31,6 +31,15 @@ namespace EFS.Utilities.FileTransfer
             return true;
         }
 
+        public void CancelTransfer(FileTransferStatus fileTransferStatus)
+        {
+            var toCancel = _transferThreads.SingleOrDefault(a => a.TransferStatus.TransferID == fileTransferStatus.TransferID);
+            if(toCancel != null)
+            {
+                toCancel.StopTransfer();
+            }
+        }
+
         public List<SendFileTransferStatus> GetTransfersByDestIP(string ipAddress)
         {
             return _transferThreads.Where(a => a.TransferStatus.DestinationIP == ipAddress).Select(a => a.TransferStatus).ToList();

@@ -1488,7 +1488,7 @@ namespace FluentFTP {
 		/// <param name="checkIfFileExists">Only set this to false if you are SURE that the file does not exist. If true, it reads the file size and saves it into the stream length.</param>
 		/// <param name="token"><param name="token">Cancellation Token</param>
 		/// <returns>A stream for writing to the file on the server</returns>
-		public virtual async Task<Stream> OpenWriteAsync(string path, FtpDataType type, bool checkIfFileExists, CancellationToken token = default(CancellationToken)) {
+		public virtual async Task<Stream> OpenWriteAsync(string path, FtpDataType type, bool checkIfFileExists, long inputFileLengthBytes, CancellationToken token = default(CancellationToken)) {
 			// verify args
 			if (path.IsBlank()) {
 				throw new ArgumentException("Required parameter is null or blank.", "path");
@@ -1512,7 +1512,7 @@ namespace FluentFTP {
 
 			await client.SetDataTypeAsync(type, token);
 			length = checkIfFileExists ? await client.GetFileSizeAsync(path, token) : 0;
-			stream = await client.OpenDataStreamAsync("STOR " + path.GetFtpPath(), 0, token);
+			stream = await client.OpenDataStreamAsync("STOR " + path.GetFtpPath() + " " + inputFileLengthBytes, 0, token);
 
 			if (length > 0 && stream != null) {
 				stream.SetLength(length);
@@ -1528,8 +1528,8 @@ namespace FluentFTP {
 		/// <param name="type">ASCII/Binary</param>
 		/// <param name="token">Cancellation Token</param>
 		/// <returns>A stream for writing to the file on the server</returns>
-		public Task<Stream> OpenWriteAsync(string path, FtpDataType type, CancellationToken token = default(CancellationToken)) {
-			return OpenWriteAsync(path, type, true, token);
+		public Task<Stream> OpenWriteAsync(string path, FtpDataType type, long inputFileLengthBytes, CancellationToken token = default(CancellationToken)) {
+			return OpenWriteAsync(path, type, true, inputFileLengthBytes, token);
 		}
 
 		/// <summary>
@@ -1539,8 +1539,8 @@ namespace FluentFTP {
 		/// <param name="token">Cancellation Token</param>
 		/// <param name="token">Cancellation Token</param>
 		/// <returns>A stream for writing to the file on the server</returns>
-		public Task<Stream> OpenWriteAsync(string path, CancellationToken token = default(CancellationToken)) {
-			return OpenWriteAsync(path, FtpDataType.Binary, true, token);
+		public Task<Stream> OpenWriteAsync(string path, long inputFileLengthBytes, CancellationToken token = default(CancellationToken)) {
+			return OpenWriteAsync(path, FtpDataType.Binary, true, inputFileLengthBytes, token);
 		}
 #endif
 

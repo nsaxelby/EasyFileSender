@@ -12,6 +12,7 @@ namespace EFS.Shared.EventModels
         long TransferredSizeBytes { get; set; }
         bool Complete { get; set; }
         bool Successful { get; set; }
+        bool Cancelled { get; set; }
         Exception Exception { get; set; }
         DateTime DateTimeStarted { get; set; }
         double SpeedBytesPerSecond { get; set; }
@@ -65,6 +66,20 @@ namespace EFS.Shared.EventModels
             {
                 _successful = value;
                 OnPropertyChanged("Successful");
+            }
+        }
+
+        private bool _cancalled;
+        public bool Cancelled
+        {
+            get
+            {
+                return _cancalled;
+            }
+            set
+            {
+                _cancalled = value;
+                OnPropertyChanged("Cancelled");
             }
         }
         public Exception Exception { get; set; }

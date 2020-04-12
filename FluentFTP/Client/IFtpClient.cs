@@ -181,9 +181,9 @@ namespace FluentFTP {
 		Task<Stream> OpenReadAsync(string path, FtpDataType type, CancellationToken token = default(CancellationToken));
 		Task<Stream> OpenReadAsync(string path, long restart, CancellationToken token = default(CancellationToken));
 		Task<Stream> OpenReadAsync(string path, CancellationToken token = default(CancellationToken));
-		Task<Stream> OpenWriteAsync(string path, FtpDataType type, bool checkIfFileExists, CancellationToken token = default(CancellationToken));
-		Task<Stream> OpenWriteAsync(string path, FtpDataType type, CancellationToken token = default(CancellationToken));
-		Task<Stream> OpenWriteAsync(string path, CancellationToken token = default(CancellationToken));
+		Task<Stream> OpenWriteAsync(string path, FtpDataType type, bool checkIfFileExists, long inputFileLengthBytes, CancellationToken token = default(CancellationToken));
+		Task<Stream> OpenWriteAsync(string path, FtpDataType type, long inputFileLengthBytes, CancellationToken token = default(CancellationToken));
+		Task<Stream> OpenWriteAsync(string path, long inputFileLengthBytes, CancellationToken token = default(CancellationToken));
 		Task<Stream> OpenAppendAsync(string path, FtpDataType type, bool checkIfFileExists, CancellationToken token = default(CancellationToken));
 		Task<Stream> OpenAppendAsync(string path, FtpDataType type, CancellationToken token = default(CancellationToken));
 
