@@ -1097,7 +1097,6 @@ namespace FluentFTP {
 				}
 
 				if (ex1 is OperationCanceledException) {
-					// TODO - Place some sort of command to send to the server to state transfer is cancelled.
 					LogStatus(FtpTraceLevel.Info, "Upload cancellation requested");
 					throw;
 				}
