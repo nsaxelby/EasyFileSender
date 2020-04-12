@@ -104,41 +104,10 @@ namespace EFS.WindowsFormApp
                     Assembly asm = Assembly.GetExecutingAssembly();
                     int pixelsIconWHP = textRect.Height - 2;
                     Point pnt = new Point(e.Bounds.Width - 12 - pixelsIconWHP, e.Bounds.Y+1);
-                    Image img = new Bitmap(Image.FromStream(ExtractResourceFile(asm, iconString)), new Size(pixelsIconWHP, pixelsIconWHP));
+                    Image img = new Bitmap(Image.FromStream(EFS.Utilities.EnvironmentTools.ExtractResourceFile(asm, iconString)), new Size(pixelsIconWHP, pixelsIconWHP));
                     e.Graphics.DrawImage(img, pnt);                    
                 }
             }
-        }
-
-
-
-        // Source: https://stackoverflow.com/questions/23010910/how-to-retrieve-a-jpg-image-using-getmanifestresourcestream-method
-        public static Stream ExtractResourceFile(Assembly assembly, String fileName)
-        {
-            // get all embedded resource file names including namespace
-            string[] fileNames = assembly.GetManifestResourceNames();
-
-            string resourceName = null;
-            string temp = "." + fileName.ToUpper();
-            foreach (var item in fileNames)
-            {
-                if (item.ToUpper().EndsWith(temp))
-                {
-                    resourceName = item;
-                }
-            }
-            if (resourceName == null)
-            {
-                throw new Exception("Embedded resource [" + fileName + "] not found");
-            }
-
-            // get stream
-            Stream stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream == null)
-            {
-                throw new Exception("Embedded resource [" + resourceName + "] could not be opened.");
-            }
-            return stream;
         }
     }
 }

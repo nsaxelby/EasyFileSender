@@ -27,7 +27,6 @@ namespace EFS.WindowsFormApp
 
         public EFSForm()
         {
-
             InitializeComponent();
         }
 
@@ -35,6 +34,7 @@ namespace EFS.WindowsFormApp
         {
             clientListBox.DataSource = _clientList;
             transfersListBox.DataSource = _selectedClientSendTransferList;
+            transfersListBox.CancelDeleteCalled += TransfersListBox_CancelDeleteCalled;
 
             // Change to either list can be handled by the same event handler
             _selectedClientSendTransferList.ListChanged += _selectedClientTransferList_ListChanged;            
@@ -73,6 +73,12 @@ namespace EFS.WindowsFormApp
             }            
 
             _sendFileService = new SendFileService();
+        }
+
+        private void TransfersListBox_CancelDeleteCalled(object sender, EventArgs e)
+        {
+            FileTransferStatus fileTransferStatus = (FileTransferStatus)sender;
+            _sendFileService.CancelTransfer(fileTransferStatus);
         }
 
         private void _selectedClientTransferList_ListChanged(object sender, ListChangedEventArgs e)

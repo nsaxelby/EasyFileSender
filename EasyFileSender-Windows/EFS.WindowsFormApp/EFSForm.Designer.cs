@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.clientListBox = new EFS.WindowsFormApp.ClientListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.transfersPanel = new System.Windows.Forms.Panel();
+            this.transfersListBox = new EFS.WindowsFormApp.Controls.TransfersListBox();
             this.yourIPLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -42,8 +44,6 @@
             this.dragAndDropPanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.addClientButton = new System.Windows.Forms.Button();
-            this.transfersListBox = new EFS.WindowsFormApp.Controls.TransfersListBox();
-            this.clientListBox = new EFS.WindowsFormApp.ClientListBox();
             this.panel1.SuspendLayout();
             this.transfersPanel.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -61,6 +61,27 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(225, 371);
             this.panel1.TabIndex = 0;
+            // 
+            // clientListBox
+            // 
+            this.clientListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.clientListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.clientListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.clientListBox.ForeColor = System.Drawing.Color.Black;
+            this.clientListBox.FormattingEnabled = true;
+            this.clientListBox.ItemHeight = 18;
+            this.clientListBox.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.clientListBox.Location = new System.Drawing.Point(-1, 22);
+            this.clientListBox.Name = "clientListBox";
+            this.clientListBox.Size = new System.Drawing.Size(225, 346);
+            this.clientListBox.TabIndex = 0;
+            this.clientListBox.SelectedValueChanged += new System.EventHandler(this.ClientListBox_SelectedValueChanged);
             // 
             // label1
             // 
@@ -93,6 +114,27 @@
             this.transfersPanel.Name = "transfersPanel";
             this.transfersPanel.Size = new System.Drawing.Size(544, 371);
             this.transfersPanel.TabIndex = 3;
+            // 
+            // transfersListBox
+            // 
+            this.transfersListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.transfersListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.transfersListBox.FormattingEnabled = true;
+            this.transfersListBox.IntegralHeight = false;
+            this.transfersListBox.ItemHeight = 75;
+            this.transfersListBox.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.transfersListBox.Location = new System.Drawing.Point(-1, 22);
+            this.transfersListBox.Name = "transfersListBox";
+            this.transfersListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.transfersListBox.Size = new System.Drawing.Size(548, 348);
+            this.transfersListBox.TabIndex = 0;
             // 
             // yourIPLabel
             // 
@@ -192,6 +234,7 @@
             // 
             // addClientButton
             // 
+            this.addClientButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.addClientButton.Location = new System.Drawing.Point(12, 415);
             this.addClientButton.Name = "addClientButton";
             this.addClientButton.Size = new System.Drawing.Size(75, 23);
@@ -199,48 +242,6 @@
             this.addClientButton.Text = "Add Client";
             this.addClientButton.UseVisualStyleBackColor = true;
             this.addClientButton.Click += new System.EventHandler(this.addClientButton_Click);
-            // 
-            // transfersListBox
-            // 
-            this.transfersListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.transfersListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.transfersListBox.FormattingEnabled = true;
-            this.transfersListBox.IntegralHeight = false;
-            this.transfersListBox.ItemHeight = 75;
-            this.transfersListBox.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
-            this.transfersListBox.Location = new System.Drawing.Point(-1, 22);
-            this.transfersListBox.Name = "transfersListBox";
-            this.transfersListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.transfersListBox.Size = new System.Drawing.Size(548, 348);
-            this.transfersListBox.TabIndex = 0;
-            // 
-            // clientListBox
-            // 
-            this.clientListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.clientListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.clientListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.clientListBox.ForeColor = System.Drawing.Color.Black;
-            this.clientListBox.FormattingEnabled = true;
-            this.clientListBox.ItemHeight = 18;
-            this.clientListBox.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
-            this.clientListBox.Location = new System.Drawing.Point(-1, 22);
-            this.clientListBox.Name = "clientListBox";
-            this.clientListBox.Size = new System.Drawing.Size(225, 346);
-            this.clientListBox.TabIndex = 0;
-            this.clientListBox.SelectedValueChanged += new System.EventHandler(this.ClientListBox_SelectedValueChanged);
             // 
             // EFSForm
             // 

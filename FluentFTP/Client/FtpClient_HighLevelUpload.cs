@@ -927,9 +927,19 @@ namespace FluentFTP {
 					}
 				}
 
+				long inputStreamLength = 0;
+				try
+				{
+					inputStreamLength = fileData.Length;
+				}
+				catch (Exception ex3)
+				{
+
+				}
+
 				// open a file connection
 				if (offset == 0 && existsMode != FtpRemoteExists.AppendNoCheck) {
-					upStream = await OpenWriteAsync(remotePath, UploadDataType, checkFileExistsAgain, token);
+					upStream = await OpenWriteAsync(remotePath, UploadDataType, checkFileExistsAgain, inputStreamLength, token);
 				}
 				else {
 					upStream = await OpenAppendAsync(remotePath, UploadDataType, checkFileExistsAgain, token);
@@ -1087,6 +1097,7 @@ namespace FluentFTP {
 				}
 
 				if (ex1 is OperationCanceledException) {
+					// TODO - Place some sort of command to send to the server to state transfer is cancelled.
 					LogStatus(FtpTraceLevel.Info, "Upload cancellation requested");
 					throw;
 				}

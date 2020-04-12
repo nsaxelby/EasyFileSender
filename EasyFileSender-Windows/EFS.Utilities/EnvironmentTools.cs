@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 
 namespace EFS.Utilities
 {
@@ -53,6 +54,35 @@ namespace EFS.Utilities
         public static string GetDownloadsFolder()
         {
             return Path.Combine(Environment.CurrentDirectory, "Downloads");
+        }
+
+        // Source: https://stackoverflow.com/questions/23010910/how-to-retrieve-a-jpg-image-using-getmanifestresourcestream-method
+        public static Stream ExtractResourceFile(Assembly assembly, String fileName)
+        {
+            // get all embedded resource file names including namespace
+            string[] fileNames = assembly.GetManifestResourceNames();
+
+            string resourceName = null;
+            string temp = "." + fileName.ToUpper();
+            foreach (var item in fileNames)
+            {
+                if (item.ToUpper().EndsWith(temp))
+                {
+                    resourceName = item;
+                }
+            }
+            if (resourceName == null)
+            {
+                throw new Exception("Embedded resource [" + fileName + "] not found");
+            }
+
+            // get stream
+            Stream stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                throw new Exception("Embedded resource [" + resourceName + "] could not be opened.");
+            }
+            return stream;
         }
     }
 }

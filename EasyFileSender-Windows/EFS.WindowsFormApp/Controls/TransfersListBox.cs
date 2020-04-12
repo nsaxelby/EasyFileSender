@@ -3,16 +3,26 @@ using EFS.Utilities;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace EFS.WindowsFormApp.Controls
 {
     public partial class TransfersListBox : ListBox
     {
+        public event EventHandler CancelDeleteCalled;
+
+        // Width and Height of Cancel button
+        readonly int _pixelsIconWHP = 15;
+        readonly int _heightOfControl = 75;
+
+        // This help with identifying if a cancel button was clicked, location within control X is same for all items
+        private int _xLocationStartCancel = -1;
+
         public TransfersListBox()
         {
             DrawMode = DrawMode.OwnerDrawFixed;
-            ItemHeight = 75;
+            ItemHeight = _heightOfControl;
             this.SetStyle(
                 ControlStyles.OptimizedDoubleBuffer |
                 ControlStyles.ResizeRedraw |
@@ -211,6 +221,16 @@ namespace EFS.WindowsFormApp.Controls
                         errorValueRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
                         TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, errorValueRect, e.ForeColor, flags);
                     }
+                    else if(ftsObj.Cancelled)
+                    {
+                        Rectangle errorLabelRect = e.Bounds;
+                        errorLabelRect.X = fileNameLabelRect.X + speedLabelRect.Width + speedValueRect.Width + 80;
+                        errorLabelRect.Y = speedValueRect.Y + speedValueRect.Height + 1;
+                        textToDisplay = "Cancelled";
+                        errorLabelRect.Width = DrawingUIUtilities.GetWidthFromFontText(e.Font, textToDisplay, e);
+                        errorLabelRect.Height = DrawingUIUtilities.GetHeightFromFontText(e.Font, textToDisplay, e);
+                        TextRenderer.DrawText(e.Graphics, textToDisplay, e.Font, errorLabelRect, Color.DarkRed, flags);
+                    }
                     else if(ftsObj.Complete && ftsObj.Successful)
                     {
                         // Label
@@ -255,6 +275,14 @@ namespace EFS.WindowsFormApp.Controls
                         SolidBrush darkBlueBrush = new SolidBrush(StaticColors.darkBlueColor);
                         e.Graphics.FillRectangle(darkBlueBrush, progressBarCurrentProgressRect);
                     }
+
+                    // Cancel/Delete button
+                    string iconString = "x-mark-xxl.png";
+                    Assembly asm = Assembly.GetExecutingAssembly();
+                    Point pnt = new Point(e.Bounds.Width - _pixelsIconWHP -2, e.Bounds.Y +2);
+                    _xLocationStartCancel = pnt.X;                    
+                    Image img = new Bitmap(Image.FromStream(EFS.Utilities.EnvironmentTools.ExtractResourceFile(asm, iconString)), new Size(_pixelsIconWHP, _pixelsIconWHP));
+                    e.Graphics.DrawImage(img, pnt);
                 }
             }
         }
@@ -281,6 +309,23 @@ namespace EFS.WindowsFormApp.Controls
                 }
             }
             base.OnPaint(e);
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            var xxyy = e.Location;
+            if(e.X >= _xLocationStartCancel && e.X <= _xLocationStartCancel + _pixelsIconWHP)
+            {
+                // Within x Bounds, now get the vertical click location
+                int leftOverYLocation = e.Y % _heightOfControl;
+                if(leftOverYLocation >= 0 && leftOverYLocation <= _pixelsIconWHP)
+                {
+                    // should be within the Y bounds of the cancel button, now div by gapBetweenCancelLocationButtonsY to get Index
+                    int indexLocItemPressed = (int)(e.Y / _heightOfControl) + this.TopIndex;
+                    CancelDeleteCalled?.Invoke(Items[indexLocItemPressed], null);
+                }
+            }
+            base.OnMouseClick(e);
         }
     }
 }
