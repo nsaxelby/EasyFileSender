@@ -44,11 +44,13 @@
             this.dragAndDropPanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.addClientButton = new System.Windows.Forms.Button();
+            this.downloadsFolderButton = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.transfersPanel.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.dragAndDropPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.downloadsFolderButton)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -243,6 +245,17 @@
             this.addClientButton.UseVisualStyleBackColor = true;
             this.addClientButton.Click += new System.EventHandler(this.addClientButton_Click);
             // 
+            // downloadsFolderButton
+            // 
+            this.downloadsFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadsFolderButton.Image = global::EFS.WindowsFormApp.Properties.Resources.Folder_Downloads_White_icon;
+            this.downloadsFolderButton.Location = new System.Drawing.Point(762, 6);
+            this.downloadsFolderButton.Name = "downloadsFolderButton";
+            this.downloadsFolderButton.Size = new System.Drawing.Size(26, 26);
+            this.downloadsFolderButton.TabIndex = 8;
+            this.downloadsFolderButton.TabStop = false;
+            this.downloadsFolderButton.Click += new System.EventHandler(this.downloadsFolderButton_Click);
+            // 
             // EFSForm
             // 
             this.AllowDrop = true;
@@ -250,6 +263,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.downloadsFolderButton);
             this.Controls.Add(this.addClientButton);
             this.Controls.Add(this.dragAndDropPanel);
             this.Controls.Add(this.sendFileButton);
@@ -272,6 +286,7 @@
             this.panel4.PerformLayout();
             this.dragAndDropPanel.ResumeLayout(false);
             this.dragAndDropPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.downloadsFolderButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -295,6 +310,7 @@
         private System.Windows.Forms.Label label5;
         private Controls.TransfersListBox transfersListBox;
         private System.Windows.Forms.Button addClientButton;
+        private System.Windows.Forms.PictureBox downloadsFolderButton;
     }
 }
 
