@@ -8,6 +8,7 @@ using EFS.WindowsFormApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -283,6 +284,11 @@ namespace EFS.WindowsFormApp
                     }
                 }
             }
+        }
+
+        private void downloadsFolderButton_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", _downloadsDirectory);
         }
     }
 }

@@ -94,6 +94,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="SelectNetworkAdapterDialog.resx">
       <DependentUpon>SelectNetworkAdapterDialog.cs</DependentUpon>
@@ -138,6 +139,9 @@
     <EmbeddedResource Include="Images\apple-32.png" />
     <EmbeddedResource Include="Images\IconAttribution.txt" />
     <EmbeddedResource Include="Images\windows-32-ico.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Folder-Downloads-White-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
