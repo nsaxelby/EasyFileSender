@@ -699,11 +699,14 @@ namespace FluentFTP {
 						throw new IOException($"Unexpected EOF for remote file {remotePath} [{offset}/{fileLen} bytes read]");
 					}
 					catch (IOException ex) {
+						// Removed as it was causing receiver initiated cancellations to retry.
 						// resume if server disconnected midway, or throw if there is an exception doing that as well
-						if (!ResumeDownload(remotePath, ref downStream, offset, ex)) {
-							sw.Stop();
-							throw;
-						}
+						//if (!ResumeDownload(remotePath, ref downStream, offset, ex)) {
+						//	sw.Stop();
+						//	throw;
+						//}
+						sw.Stop();
+						throw;
 					}
 					catch (TimeoutException ex) {
 						// fix: attempting to download data after we reached the end of the stream
@@ -870,14 +873,16 @@ namespace FluentFTP {
 					}
 					catch (IOException ex) {
 						// resume if server disconnected midway, or throw if there is an exception doing that as well
-						var resumeResult = await ResumeDownloadAsync(remotePath, downStream, offset, ex);
-						if (resumeResult.Item1) {
-							downStream = resumeResult.Item2;
-						}
-						else {
-							sw.Stop();
-							throw;
-						}
+						// Removed as it was causing receiver initiated cancellations to retry.
+
+						//var resumeResult = await ResumeDownloadAsync(remotePath, downStream, offset, ex);
+						//if (resumeResult.Item1) {
+						//	downStream = resumeResult.Item2;
+						//}
+						//else {
+						sw.Stop();
+						throw;
+						//}
 					}
 					catch (TimeoutException ex) {
 						// fix: attempting to download data after we reached the end of the stream

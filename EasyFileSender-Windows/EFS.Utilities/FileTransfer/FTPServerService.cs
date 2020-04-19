@@ -1,13 +1,14 @@
 ﻿using EFS.Shared.EventModels;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
-using FubarDev.FtpServer.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Linq;
 using FubarDev.FtpServer;
 using EFS.Global.Models;
 using EFS.Utilities.Discovery;
+using FubarDev.FtpServer.Features;
+using System.Threading;
 
 namespace EFS.Utilities.FileTransfer
 {
@@ -16,6 +17,7 @@ namespace EFS.Utilities.FileTransfer
         private readonly int _port;
         private readonly IFtpServerHost _ftpHost;
         public BindingList<IncomingFileTransferStatus> _myIncommingTransfers = new BindingList<IncomingFileTransferStatus>();
+        private ServiceProvider _servProvider;
         
         public FTPServerService(string localDirectory, int port, ClientInfo clientInfo)
         {
@@ -51,11 +53,11 @@ namespace EFS.Utilities.FileTransfer
             });
 
             // Build the service provider
-            var serviceProvider = services.BuildServiceProvider();
+            _servProvider = services.BuildServiceProvider();
             // Initialize the FTP server
-            _ftpHost = serviceProvider.GetRequiredService<IFtpServerHost>();
+            _ftpHost = _servProvider.GetRequiredService<IFtpServerHost>();
 
-            var provider = serviceProvider.GetRequiredService<IFileSystemClassFactory>();
+            var provider = _servProvider.GetRequiredService<IFileSystemClassFactory>();
             if(provider.GetType() == typeof(DotNetFileSystemProvider))
             {
                 var pp = (DotNetFileSystemProvider)provider;
@@ -84,6 +86,12 @@ namespace EFS.Utilities.FileTransfer
             {
                 _myIncommingTransfers.Add(e);
             }
+        }
+
+        public void CancelIncommingTransfer(IncomingFileTransferStatus toCancel)
+        {
+            IncomingFileTransferStatus record = _myIncommingTransfers.SingleOrDefault(a => a.TransferID == toCancel.TransferID);
+            record.FtpDataConnection.CancelAsync();
         }
 
         public bool StartService()

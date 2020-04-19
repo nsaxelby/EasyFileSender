@@ -46,5 +46,11 @@
     <Compile Include="EventModels\SendFileTransferStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FubarSrc\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj">
+      <Project>{51EF082F-6F6E-4A7F-9939-8A6F272A5457}</Project>
+      <Name>FubarDev.FtpServer.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

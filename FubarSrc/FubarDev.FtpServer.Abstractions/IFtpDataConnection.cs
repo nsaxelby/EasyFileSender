@@ -34,11 +34,15 @@ namespace FubarDev.FtpServer
         /// </summary>
         bool Closed { get; }
 
+        bool Cancelled { get; }
+
         /// <summary>
         /// Closes the connection (and the stream).
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
         Task CloseAsync(CancellationToken cancellationToken);
+
+        void CancelAsync();
     }
 }

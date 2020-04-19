@@ -168,13 +168,14 @@ namespace FubarDev.FtpServer.DataConnection
             private class PassiveDataConnection : IFtpDataConnection
             {
                 private readonly TcpClient _client;
-
+                private bool _cancelled;
                 private bool _closed;
 
                 public PassiveDataConnection(
                     TcpClient client)
                 {
                     _client = client;
+                    _cancelled = false;
                     Stream = _client.GetStream();
                     LocalAddress = (IPEndPoint)client.Client.LocalEndPoint;
                     RemoteAddress = (IPEndPoint)client.Client.RemoteEndPoint;
@@ -191,6 +192,13 @@ namespace FubarDev.FtpServer.DataConnection
 
                 /// <inheritdoc />
                 public bool Closed => _closed;
+
+                public bool Cancelled => _cancelled;
+
+                public void CancelAsync()
+                {
+                    _cancelled = true;
+                }
 
                 /// <inheritdoc />
                 public async Task CloseAsync(CancellationToken cancellationToken)

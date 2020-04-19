@@ -79,7 +79,14 @@ namespace EFS.WindowsFormApp
         private void TransfersListBox_CancelDeleteCalled(object sender, EventArgs e)
         {
             FileTransferStatus fileTransferStatus = (FileTransferStatus)sender;
-            _sendFileService.CancelTransfer(fileTransferStatus);
+            if(sender is IncomingFileTransferStatus)
+            {
+                _ftpServerService.CancelIncommingTransfer((IncomingFileTransferStatus)sender);
+            }
+            else if(sender is SendFileTransferStatus)
+            {
+                _sendFileService.CancelTransfer(fileTransferStatus);
+            }
         }
 
         private void _selectedClientTransferList_ListChanged(object sender, ListChangedEventArgs e)

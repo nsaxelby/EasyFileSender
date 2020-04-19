@@ -110,7 +110,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                             stream,
                             cancellationToken,
                             0,
-                            dataConnection.RemoteAddress.Address.ToString())
+                            dataConnection.RemoteAddress.Address.ToString(),
+                            dataConnection)
                        .ConfigureAwait(false);
                 }
                 else
