@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 
 namespace FubarDev.FtpServer
 {
@@ -67,5 +68,7 @@ namespace FubarDev.FtpServer
         /// </remarks>
         [Obsolete("User IFtpServerHost.StopAsync instead.")]
         void Stop();
+
+        IEnumerable<IFtpConnection> GetConnections();
     }
 }

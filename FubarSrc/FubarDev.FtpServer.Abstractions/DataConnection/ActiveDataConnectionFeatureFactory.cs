@@ -228,6 +228,7 @@ namespace FubarDev.FtpServer.DataConnection
                 private readonly TcpClient _client;
 
                 private bool _closed;
+                private bool _cancelled;
 
                 public ActiveDataConnection(
                     TcpClient client)
@@ -236,6 +237,7 @@ namespace FubarDev.FtpServer.DataConnection
                     Stream = client.GetStream();
                     LocalAddress = (IPEndPoint)client.Client.LocalEndPoint;
                     RemoteAddress = (IPEndPoint)client.Client.RemoteEndPoint;
+                    _cancelled = false;
                 }
 
                 /// <inheritdoc />
@@ -249,6 +251,12 @@ namespace FubarDev.FtpServer.DataConnection
 
                 /// <inheritdoc />
                 public bool Closed => _closed;
+                public bool Cancelled => _cancelled;
+
+                public void CancelAsync()
+                {
+                    _cancelled = true;
+                }
 
                 /// <inheritdoc />
                 public async Task CloseAsync(CancellationToken cancellationToken)

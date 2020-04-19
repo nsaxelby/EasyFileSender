@@ -120,7 +120,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="expectedFileSize">Expected file size of dest, for progress updates.</param>
         /// <param name="remoteIPAddress">String IP of sender IP</param>
         /// <returns>an optional <see cref="IBackgroundTransfer"/> when the transfer needs to happen in the background.</returns>
-        Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress);
+        Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress, IFtpDataConnection ftpDataConnection );
 
         /// <summary>
         /// Replaces the contents of a file.

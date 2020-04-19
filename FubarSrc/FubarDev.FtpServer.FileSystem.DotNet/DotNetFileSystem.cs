@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using EFS.Shared.EventModels;
@@ -202,7 +203,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress)
+        public async Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken, long expectedFileSize, string remoteIPAddress, IFtpDataConnection ftpDataConnection)
         {
             IncomingFileTransferStatus frs = new IncomingFileTransferStatus()
             {
@@ -216,6 +217,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 Successful = false,
                 SpeedBytesPerSecond = 0.0,
                 TransferID = Guid.NewGuid(),
+                FtpDataConnection = ftpDataConnection,
             };
 
             try
@@ -231,24 +233,38 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                     DateTime datetimeLastSent = default;
 
                     int read;
-                    while ((read = data.Read(buffer, 0, buffer.Length)) > 0)
+                    try
                     {
-                        totalBytesRead += read;
-                        output.Write(buffer, 0, read);
-
-                        // Don't send it every update, wait as to not overload the events
-                        if (datetimeLastSent <= DateTime.Now.AddMilliseconds(-300))
+                        while (ftpDataConnection.Cancelled == false && (read = data.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            frs.TransferredSizeBytes = totalBytesRead;
-                            frs.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(frs.DateTimeStarted, totalBytesRead);
-                            datetimeLastSent = DateTime.Now;
-                            OnFileDataReceived(frs);
+                            totalBytesRead += read;
+                            output.Write(buffer, 0, read);
+
+                            // Don't send it every update, wait as to not overload the events
+                            if (datetimeLastSent <= DateTime.Now.AddMilliseconds(-300))
+                            {
+                                frs.TransferredSizeBytes = totalBytesRead;
+                                frs.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(frs.DateTimeStarted, totalBytesRead);
+                                datetimeLastSent = DateTime.Now;
+                                OnFileDataReceived(frs);
+                            }
+                        }
+                    }
+                    catch (Exception ex1)
+                    {
+                        if (ftpDataConnection.Cancelled)
+                        {
+                            // Purposely ignore
+                        }
+                        else
+                        {
+                            throw ex1;
                         }
                     }
                 }
                 frs.SpeedBytesPerSecond = GetBytesPerSecondFromDateTime(frs.DateTimeStarted, totalBytesRead);
                 frs.TransferredSizeBytes = totalBytesRead;
-                if (totalBytesRead != expectedFileSize)
+                if (totalBytesRead != expectedFileSize || ftpDataConnection.Cancelled)
                 {
                     // We count this as cancelled, as opposed to exceptioned. Realstically we don't know if it was either.
                     frs.Complete = true;

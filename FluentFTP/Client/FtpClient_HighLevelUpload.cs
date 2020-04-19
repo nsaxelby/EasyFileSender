@@ -769,10 +769,11 @@ namespace FluentFTP {
 					}
 					catch (IOException ex) {
 						// resume if server disconnected midway, or throw if there is an exception doing that as well
-						if (!ResumeUpload(remotePath, ref upStream, offset, ex)) {
-							sw.Stop();
-							throw;
-						}
+						// Removed as it was causing receiver initiated cancellations to retry.
+						//if (!ResumeUpload(remotePath, ref upStream, offset, ex)) {
+						sw.Stop();
+						throw;
+						//}
 					}
 					catch (TimeoutException ex) {
 						// fix: attempting to upload data after we reached the end of the stream
@@ -1020,14 +1021,16 @@ namespace FluentFTP {
 					}
 					catch (IOException ex) {
 						// resume if server disconnected midway, or throw if there is an exception doing that as well
-						var resumeResult = await ResumeUploadAsync(remotePath, upStream, offset, ex);
-						if (resumeResult.Item1) {
-							upStream = resumeResult.Item2;
-						}
-						else {
-							sw.Stop();
-							throw;
-						}
+						// Removed as it was causing receiver initiated cancellations to retry.
+
+						//var resumeResult = await ResumeUploadAsync(remotePath, upStream, offset, ex);
+						//if (resumeResult.Item1) {
+						//	upStream = resumeResult.Item2;
+						//}
+						//else {
+						sw.Stop();
+						throw;
+						//}
 					}
 					catch (TimeoutException ex) {
 						// fix: attempting to upload data after we reached the end of the stream

@@ -56,6 +56,7 @@ namespace FubarDev.FtpServer.DataConnection
             private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
             private bool _closed;
+            private bool _cancelled;
 
             public SecureFtpDataConnection(
                 IFtpDataConnection originalDataConnection,
@@ -67,6 +68,7 @@ namespace FubarDev.FtpServer.DataConnection
                 LocalAddress = originalDataConnection.LocalAddress;
                 RemoteAddress = originalDataConnection.RemoteAddress;
                 Stream = stream;
+                _cancelled = false;
             }
 
             /// <inheritdoc />
@@ -80,6 +82,13 @@ namespace FubarDev.FtpServer.DataConnection
 
             /// <inheritdoc />
             public bool Closed => _closed;
+
+            public bool Cancelled => _cancelled;
+
+            public void CancelAsync()
+            {
+                _cancelled = true;
+            }
 
             /// <inheritdoc />
             public async Task CloseAsync(CancellationToken cancellationToken)

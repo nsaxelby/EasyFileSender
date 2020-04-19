@@ -128,7 +128,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                         stream,
                         cancellationToken,
                         expectedFileSize,
-                        dataConnection.RemoteAddress.Address.ToString())
+                        dataConnection.RemoteAddress.Address.ToString(),
+                        dataConnection)
                    .ConfigureAwait(false);
                 Console.WriteLine("Create new ended");
 
